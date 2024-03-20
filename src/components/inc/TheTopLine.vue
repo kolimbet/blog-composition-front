@@ -3,7 +3,7 @@
     <div class="container-fluid justify-content-between">
       <div class="h-8 d-flex">
         <RouterLink
-          to="/"
+          :to="{ name: 'home' }"
           class="d-flex align-items-center text-decoration-none text-white opacity-75-hover"
           title="Home Page"
         >
