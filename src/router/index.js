@@ -6,15 +6,6 @@ import {
 import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
-  // {
-  //   path: "/loading",
-  //   name: "loading",
-  //   component: () => import("@/components/TheLoadingComponent.vue"),
-  //   meta: {
-  //     // initializationIsComplete: false,
-  //     requiresAuthorization: false,
-  //   },
-  // },
   {
     path: "/",
     name: "home",
@@ -40,28 +31,55 @@ const routes = [
     },
   },
   {
-    path: "/account/:section/:identifier",
-    name: "account_section_with_id",
-    component: () => import("@/components/account/TheUserAccount.vue"),
-    meta: {
-      requiresAuthorization: true,
-    },
-  },
-  {
-    path: "/account/:section",
-    name: "account_section",
-    component: () => import("@/components/account/TheUserAccount.vue"),
-    meta: {
-      requiresAuthorization: true,
-    },
-  },
-  {
     path: "/account",
-    name: "account",
     component: () => import("@/components/account/TheUserAccount.vue"),
     meta: {
       requiresAuthorization: true,
     },
+    children: [
+      {
+        path: "home",
+        alias: "",
+        name: "account_home",
+        component: () => import("@/components/account/AccountHome.vue"),
+      },
+      {
+        path: "posts",
+        children: [
+          {
+            path: "",
+            name: "account_posts",
+            component: () => import("@/components/account/AccountPosts.vue"),
+          },
+          {
+            path: "create",
+            name: "post_create",
+            component: () => import("@/components/post/PostCreate.vue"),
+          },
+          {
+            path: ":postId",
+            name: "post_edit",
+            component: () => import("@/components/post/PostEdit.vue"),
+            props: true,
+          },
+        ],
+      },
+      {
+        path: "comments",
+        name: "account_comments",
+        component: () => import("@/components/account/AccountComments.vue"),
+      },
+      {
+        path: "avatar",
+        name: "account_avatar",
+        component: () => import("@/components/account/AccountAvatar.vue"),
+      },
+      {
+        path: "password",
+        name: "account_password",
+        component: () => import("@/components/account/AccountPassword.vue"),
+      },
+    ],
   },
   {
     path: "/:pathMatch(.*)",

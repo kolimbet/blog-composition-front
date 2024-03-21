@@ -15517,6 +15517,21 @@ textarea.form-control-lg {
   margin-right: 1rem;
 }
 
+.account-link {
+  padding: 0.25rem 0.75rem;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  color: rgb(255, 255, 255);
+}
+.account-link:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+.account-link[aria-current=page] {
+  background-color: #053680;
+  border-radius: 0.375rem;
+}
+
 /* single animations */
 .fade-enter-active, .fade-leave-active {
   transition: all 0.5s linear;
