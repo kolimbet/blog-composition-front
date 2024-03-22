@@ -107,7 +107,7 @@ export async function apiUserRegister(regData) {
 export async function apiUserNameIsFree(name) {
   return new Promise((resolve, reject) => {
     axios
-      .post(sourceUrls.userEmailIsFree, { name })
+      .post(sourceUrls.userNameIsFree, { name })
       .then(({ data }) => {
         resolve(data);
       })
