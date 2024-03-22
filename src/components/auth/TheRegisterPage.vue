@@ -3,7 +3,7 @@
     <h2 class="text-center">Register Form</h2>
 
     <div
-      class="mb-4 d-flex justify-content-center align-items-center min-vh-50"
+      class="mb-4 d-flex justify-content-center align-items-center min-h-50vh"
     >
       <div class="w-percent-100 mw-md">
         <Transition name="fade" mode="out-in">
