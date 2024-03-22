@@ -6,6 +6,12 @@
     >
       <div class="w-percent-100 mw-md">
         <!-- Request Error -->
+        <ErrorSingle
+          :is-error="errorTrigger"
+          :error-object="errorObject"
+          :reload-trigger="triggerForReloadingErrors"
+          class="mb-4"
+        />
 
         <div class="mb-4">
           <label for="form-email" class="fs-sm text-secondary">Email</label>
@@ -15,6 +21,11 @@
             type="email"
             class="form-control"
             placeholder="Email"
+          />
+
+          <ErrorList
+            :error-list="v$.form.email.$errors"
+            :reload-trigger="triggerForReloadingErrors"
           />
         </div>
 
@@ -29,25 +40,31 @@
             class="form-control"
             placeholder="Password"
           />
+
+          <ErrorList
+            :error-list="v$.form.password.$errors"
+            :reload-trigger="triggerForReloadingErrors"
+          />
         </div>
 
         <div class="mb-4 form-check">
           <input
             v-model="form.remember"
-            id="remember-me"
-            name="remember"
+            id="form-remember-me"
             type="checkbox"
             class="form-check-input"
             title="Remember me"
           />
-          <label for="remember-me" class="form-check-label">Remember me</label>
+          <label for="form-remember-me" class="form-check-label"
+            >Remember me</label
+          >
         </div>
 
         <div class="mb-4">
           <BaseRequestButton
             @click="login()"
             :text="'Sing in'"
-            :processing="processing"
+            :processing="requestProcessing"
           />
         </div>
 
@@ -66,10 +83,15 @@
 
 <script setup>
 import BaseRequestButton from "../base/BaseRequestButton.vue";
+import ErrorSingle from "../inc/ErrorSingle.vue";
+import ErrorList from "../inc/ErrorList.vue";
 
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { actionLogin } from "@/composables/storeAuth";
+import { useRequest } from "@/composables/request.js";
+import { useVuelidate } from "@vuelidate/core";
+import { required, email } from "@vuelidate/validators";
 
 const router = useRouter();
 
@@ -79,28 +101,57 @@ const form = ref({
   remember: false,
 });
 
-const processing = ref(false);
+const {
+  requestProcessing,
+  triggerForReloadingErrors,
+  errorTrigger,
+  errorObject,
+  setError,
+  reloadErrors,
+} = useRequest();
+
+const loginRules = computed(() => ({
+  form: {
+    email: {
+      required,
+      email,
+    },
+    password: {
+      required,
+    },
+  },
+}));
+
+const v$ = useVuelidate(
+  loginRules,
+  { form },
+  {
+    $lazy: true,
+  }
+);
 
 function login() {
-  if (!processing.value && form.value.email && form.value.password) {
-    processing.value = true;
-    // console.log(form.value);
+  if (requestProcessing.value) return;
+  requestProcessing.value = true;
+  reloadErrors();
 
-    // setTimeout(() => {
-    actionLogin(form.value)
-      .then((userData) => {
-        form.value.email = form.value.password = "";
-        console.log(`Вы успешно вошли как ${userData.name}`);
-        router.replace({ name: "home" });
-      })
-      .catch((err) => {
-        console.log("actionLogin() catch:", err);
-        // setError(err);
-      })
-      .finally(() => {
-        processing.value = false;
-      });
-    // }, 2000);
-  }
+  v$.value.$validate().then(() => {
+    if (v$.value.$invalid) {
+      requestProcessing.value = false;
+    } else {
+      actionLogin(form.value)
+        .then((userData) => {
+          form.value.email = form.value.password = "";
+          console.log(`Вы успешно вошли как ${userData.name}`);
+          router.push({ name: "home" });
+        })
+        .catch((err) => {
+          setError(err);
+        })
+        .finally(() => {
+          requestProcessing.value = false;
+        });
+    }
+  });
 }
 </script>
