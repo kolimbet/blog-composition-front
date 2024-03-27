@@ -15493,6 +15493,21 @@ textarea.form-control-lg {
   opacity: 0.8;
 }
 
+@keyframes rotation-360 {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.rotation-process {
+  animation: rotation-360 2s infinite linear;
+}
+
 .comment,
 .add-comment {
   padding: 0.7rem 1.5rem 1rem;
