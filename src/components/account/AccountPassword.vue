@@ -119,6 +119,7 @@ import {
   sameAs,
   helpers,
 } from "@vuelidate/validators";
+import { notSameAs } from "@/validators";
 import { apiUserPasswordCheck, apiUserPasswordUpdate } from "@/api";
 
 const form = ref({
@@ -172,14 +173,6 @@ const v$ = useVuelidate(
     $lazy: true,
   }
 );
-
-function notSameAs(param) {
-  return helpers.withParams({ type: "notSameAs", value: param }, (value) => {
-    // console.log("validator notSameAs", value, param);
-    if (value !== param) return true;
-    else return false;
-  });
-}
 
 function validatingCurrentPassword(value) {
   let result = {

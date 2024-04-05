@@ -260,3 +260,18 @@ export async function apiPostListAccount(page = 1) {
       });
   });
 }
+
+export async function apiPostStore(post) {
+  return new Promise((resolve, reject) => {
+    // reject("apiPostStore test stopper");
+    axios
+      .post(sourceUrls.accountPosts, post)
+      .then(({ data }) => {
+        // console.log("api->postStore completed successfully", data);
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(parseApiError(err));
+      });
+  });
+}

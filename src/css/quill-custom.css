@@ -1,0 +1,16 @@
+.ql-container {
+  font-size: 15px;
+}
+
+.ql-editor p,
+.ql-editor ol,
+.ql-editor pre,
+.ql-editor blockquote,
+.ql-editor h1,
+.ql-editor h2,
+.ql-editor h3,
+.ql-editor h4,
+.ql-editor h5,
+.ql-editor h6 {
+  margin-bottom: 0.5rem;
+}
