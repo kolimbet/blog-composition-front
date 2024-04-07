@@ -152,7 +152,6 @@ import ErrorList from "../inc/ErrorList.vue";
 import BaseRequestButton from "../base/BaseRequestButton.vue";
 import EditorPost from "../quill/EditorPost.vue";
 
-// import { Delta } from "quill/core";
 import { computed, ref } from "vue";
 import { useRequest } from "@/composables/request";
 import { Delta } from "quill/core";

@@ -12,3 +12,13 @@ export function parseApiError(err) {
   // console.log(`get error message: ${message}`);
   return message;
 }
+
+export function dateFromTimestamp(time) {
+  return new Date(time).toLocaleString("ru", {
+    hour: "numeric",
+    minute: "numeric",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}

@@ -261,13 +261,43 @@ export async function apiPostListAccount(page = 1) {
   });
 }
 
+export async function apiPostItemAccount(postId) {
+  return new Promise((resolve, reject) => {
+    // reject("apiPostItemAccount test stopper");
+    axios
+      .get(sourceUrls.accountPosts + "/" + postId)
+      .then(({ data }) => {
+        // console.log("apiPostItemAccount completed successfully", data);
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(parseApiError(err));
+      });
+  });
+}
+
 export async function apiPostStore(post) {
   return new Promise((resolve, reject) => {
     // reject("apiPostStore test stopper");
     axios
       .post(sourceUrls.accountPosts, post)
       .then(({ data }) => {
-        // console.log("api->postStore completed successfully", data);
+        // console.log("apiPostStore completed successfully", data);
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(parseApiError(err));
+      });
+  });
+}
+
+export async function apiPostUpdate(postId, post) {
+  return new Promise((resolve, reject) => {
+    // reject("apiPostUpdate test stopper");
+    axios
+      .post(sourceUrls.accountPosts + "/" + postId, post)
+      .then(({ data }) => {
+        // console.log("apiPostUpdate completed successfully", data);
         resolve(data);
       })
       .catch((err) => {

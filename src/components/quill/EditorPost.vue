@@ -9,7 +9,7 @@ import "@/css/quill-custom.css";
 
 import Quill from "quill";
 import { Delta } from "quill/core";
-import { defineEmits, defineProps, onMounted, ref } from "vue";
+import { defineEmits, defineProps, onMounted, ref, watch } from "vue";
 import _ from "lodash";
 
 Quill.prototype.getHtml = function () {
@@ -89,6 +89,13 @@ function contentSettingHandler() {
     getHTML();
   }
 }
+
+watch(
+  () => props.content,
+  () => {
+    contentSettingHandler();
+  }
+);
 
 function contentUpdateHandler() {
   const newContent = editor.getContents();
