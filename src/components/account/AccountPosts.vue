@@ -16,12 +16,14 @@
     </div>
 
     <!-- Request Error -->
-    <ErrorSingle
-      :is-error="errorTrigger"
-      :error-object="errorObject"
-      :reload-trigger="triggerForReloadingErrors"
-      class="mb-4"
-    />
+    <div ref="refErrorMessage">
+      <ErrorSingle
+        :is-error="errorTrigger"
+        :error-object="errorObject"
+        :reload-trigger="triggerForReloadingErrors"
+        class="mb-4"
+      />
+    </div>
 
     <template v-if="hasPosts">
       <div class="mb-3">
@@ -63,6 +65,7 @@ import { apiPostListAccount } from "@/api";
 const postList = ref(null);
 
 const {
+  refErrorMessage,
   requestProcessing,
   triggerForReloadingErrors,
   errorTrigger,

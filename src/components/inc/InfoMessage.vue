@@ -1,7 +1,7 @@
 <template>
   <Transition name="slide-left" mode="out-in">
     <div
-      v-if="display"
+      v-if="props.display"
       class="mt-1 px-3 py-2 rounded-2 border border-opacity-50 text-center"
       :class="[cardClasses]"
     >
@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { computed, defineEmits, defineProps, watch } from "vue";
+import { computed, defineProps } from "vue";
 
 const props = defineProps({
   message: String,
@@ -20,17 +20,7 @@ const props = defineProps({
     default: "success",
   },
   display: Boolean,
-  autoDisappearing: {
-    type: Boolean,
-    default: false,
-  },
-  intervalOfDisappearance: {
-    type: Number,
-    default: 5000,
-  },
 });
-
-const emit = defineEmits(["update:display"]);
 
 const cardClasses = computed(() => {
   switch (props.messageType) {
@@ -45,17 +35,4 @@ const cardClasses = computed(() => {
       return "border-green bg-green-light text-green-dark";
   }
 });
-
-watch(
-  () => props.display,
-  (newValue) => {
-    if (props.autoDisappearing && newValue) {
-      setTimeout(() => {
-        if (props.display) {
-          emit("update:display", false);
-        }
-      }, props.intervalOfDisappearance);
-    }
-  }
-);
 </script>

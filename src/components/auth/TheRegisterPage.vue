@@ -28,12 +28,14 @@
           </div>
           <div v-else>
             <!-- Request Error -->
-            <ErrorSingle
-              :is-error="errorTrigger"
-              :error-object="errorObject"
-              :reload-trigger="triggerForReloadingErrors"
-              class="mb-4"
-            />
+            <div ref="refErrorMessage">
+              <ErrorSingle
+                :is-error="errorTrigger"
+                :error-object="errorObject"
+                :reload-trigger="triggerForReloadingErrors"
+                class="mb-4"
+              />
+            </div>
 
             <div class="mb-4">
               <label for="form-name" class="fs-sm text-secondary">Name</label>
@@ -147,6 +149,7 @@ const registrationIsCompleted = ref(false);
 
 const router = useRouter();
 const {
+  refErrorMessage,
   requestProcessing,
   triggerForReloadingErrors,
   errorTrigger,

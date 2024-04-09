@@ -1,12 +1,13 @@
-import { ref } from "vue";
+import { nextTick, ref } from "vue";
 
 export function useMessage() {
   const refMessage = ref(null);
   const messageDisplay = ref(false);
   const messageText = ref("");
   const messageType = ref("success");
-  const messageAutoDisappearing = ref(false);
-  const messageIntervalOfDisappearance = ref(5000);
+  let messageAutoDisappearing = false;
+  let messageIntervalOfDisappearance = 5000;
+  let disappearancePointer = null;
 
   function messageCreate(
     text,
@@ -14,16 +15,36 @@ export function useMessage() {
     autoDisappearing = false,
     intervalOfDisappearance = false
   ) {
+    if (messageDisplay.value) {
+      messageDisplay.value = false;
+      clearDisappearancePointer();
+
+      nextTick(() => {
+        create(text, type, autoDisappearing, intervalOfDisappearance);
+      });
+    } else {
+      create(text, type, autoDisappearing, intervalOfDisappearance);
+    }
+  }
+
+  function create(text, type, autoDisappearing, intervalOfDisappearance) {
     messageText.value = text;
 
     if (type) messageType.value = type;
     else messageType.value = "success";
 
-    messageAutoDisappearing.value = Boolean(autoDisappearing);
+    messageAutoDisappearing = Boolean(autoDisappearing);
 
     if (intervalOfDisappearance)
-      messageIntervalOfDisappearance.value = +intervalOfDisappearance;
-    else messageIntervalOfDisappearance.value = 5000;
+      messageIntervalOfDisappearance = +intervalOfDisappearance;
+    else messageIntervalOfDisappearance = 5000;
+
+    if (messageAutoDisappearing) {
+      disappearancePointer = setTimeout(() => {
+        messageDisplay.value = false;
+        disappearancePointer = null;
+      }, messageIntervalOfDisappearance);
+    }
 
     messageDisplay.value = true;
 
@@ -34,13 +55,18 @@ export function useMessage() {
       });
   }
 
+  function clearDisappearancePointer() {
+    if (disappearancePointer) {
+      clearTimeout(disappearancePointer);
+      disappearancePointer = null;
+    }
+  }
+
   return {
     refMessage,
     messageDisplay,
     messageText,
     messageType,
-    messageAutoDisappearing,
-    messageIntervalOfDisappearance,
     messageCreate,
   };
 }

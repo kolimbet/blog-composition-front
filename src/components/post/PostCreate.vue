@@ -43,12 +43,14 @@
     </template>
     <template v-else>
       <!-- Request Error -->
-      <ErrorSingle
-        :is-error="errorTrigger"
-        :error-object="errorObject"
-        :reload-trigger="triggerForReloadingErrors"
-        class="mb-4"
-      />
+      <div ref="refErrorMessage">
+        <ErrorSingle
+          :is-error="errorTrigger"
+          :error-object="errorObject"
+          :reload-trigger="triggerForReloadingErrors"
+          class="mb-4"
+        />
+      </div>
 
       <div class="mb-4">
         <label for="form-title" class="fs-sm text-secondary">Title</label>
@@ -177,6 +179,7 @@ const postStoreIsCompleted = ref(false);
 const newPostId = ref(false);
 
 const {
+  refErrorMessage,
   requestProcessing,
   triggerForReloadingErrors,
   errorTrigger,

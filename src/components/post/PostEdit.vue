@@ -18,8 +18,6 @@
         v-model:display="messageDisplay"
         :message="messageText"
         :message-type="messageType"
-        :auto-disappearing="messageAutoDisappearing"
-        :interval-of-disappearance="messageIntervalOfDisappearance"
         class="mb-4"
       />
     </div>
@@ -172,15 +170,8 @@ const form = ref({
 
 const postData = ref(null);
 
-const {
-  refMessage,
-  messageDisplay,
-  messageText,
-  messageType,
-  messageAutoDisappearing,
-  messageIntervalOfDisappearance,
-  messageCreate,
-} = useMessage();
+const { refMessage, messageDisplay, messageText, messageType, messageCreate } =
+  useMessage();
 
 const {
   refErrorMessage,

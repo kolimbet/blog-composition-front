@@ -93,6 +93,7 @@ export async function apiCheckAuth() {
 // --------------------------- User: registering a new one  --------------------------- //
 export async function apiUserRegister(regData) {
   return new Promise((resolve, reject) => {
+    // reject("apiUserRegister test stopper");
     axios
       .post(sourceUrls.userRegister, regData)
       .then(() => {
@@ -133,6 +134,7 @@ export async function apiUserEmailIsFree(email) {
 // --------------------------- User: changing password  --------------------------- //
 export async function apiUserPasswordCheck(password) {
   return new Promise((resolve, reject) => {
+    // reject("apiUserPasswordCheck test stopper");
     axios
       .post(sourceUrls.userPasswordCheck, { password: password })
       .then(({ data }) => {
@@ -147,6 +149,7 @@ export async function apiUserPasswordCheck(password) {
 
 export async function apiUserPasswordUpdate(form) {
   return new Promise((resolve, reject) => {
+    // reject("apiUserPasswordUpdate test stopper");
     axios
       .post(sourceUrls.userPasswordUpdate, form)
       .then(({ data }) => {

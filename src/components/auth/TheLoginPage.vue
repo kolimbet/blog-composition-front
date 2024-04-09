@@ -6,12 +6,14 @@
     >
       <div class="w-percent-100 mw-md">
         <!-- Request Error -->
-        <ErrorSingle
-          :is-error="errorTrigger"
-          :error-object="errorObject"
-          :reload-trigger="triggerForReloadingErrors"
-          class="mb-4"
-        />
+        <div ref="refErrorMessage">
+          <ErrorSingle
+            :is-error="errorTrigger"
+            :error-object="errorObject"
+            :reload-trigger="triggerForReloadingErrors"
+            class="mb-4"
+          />
+        </div>
 
         <div class="mb-4">
           <label for="form-email" class="fs-sm text-secondary">Email</label>
@@ -102,6 +104,7 @@ const form = ref({
 });
 
 const {
+  refErrorMessage,
   requestProcessing,
   triggerForReloadingErrors,
   errorTrigger,
