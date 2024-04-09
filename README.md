@@ -2,7 +2,7 @@
 
 This is a simple blog SPA on VueJS 3 with Composition API.
 
-> Frontend for https://github.com/kolimbet/blog-spa-back
+> Frontend for https://github.com/kolimbet/blog-composition-back
 
 ## Installation
 
