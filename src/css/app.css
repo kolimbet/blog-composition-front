@@ -15494,6 +15494,17 @@ textarea.form-control-lg {
 }
 
 /* ------------------------- Posts -------------------------- */
+.feed-post-list {
+  margin-bottom: 1.5rem;
+}
+
+.feed-post-list .post-preview {
+  margin-bottom: 1.5rem;
+}
+.feed-post-list .post-preview .post-excerpt p {
+  margin-bottom: 0.5rem;
+}
+
 .account-post-list {
   margin-bottom: 1rem;
 }

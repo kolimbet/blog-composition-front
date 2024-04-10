@@ -247,6 +247,23 @@ export async function apiImageDelete(imageId) {
 }
 
 /* ------------------------- Posts ------------------------ */
+export async function apiPostListFeed(page = 1) {
+  return new Promise((resolve, reject) => {
+    // reject("apiPostListFeed test stopper");
+    const requestURL = new URL(sourceUrls.posts, backendDomain);
+    if (page > 1) requestURL.searchParams.append("page", page);
+    axios
+      .get(requestURL)
+      .then(({ data }) => {
+        console.log("apiPostListFeed completed successfully", data);
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(parseApiError(err));
+      });
+  });
+}
+
 export async function apiPostListAccount(page = 1) {
   return new Promise((resolve, reject) => {
     // reject("apiPostListAccount test stopper");

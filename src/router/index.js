@@ -15,6 +15,15 @@ const routes = [
     },
   },
   {
+    path: "/:postSlug",
+    name: "post",
+    component: () => import("@/components/post/ThePostItem.vue"),
+    meta: {
+      requiresAuthorization: false,
+    },
+    props: true,
+  },
+  {
     path: "/login",
     name: "login",
     component: () => import("@/components/auth/TheLoginPage.vue"),
@@ -41,7 +50,7 @@ const routes = [
         path: "home",
         alias: "",
         name: "account_home",
-        component: () => import("@/components/account/AccountHome.vue"),
+        component: () => import("@/components/account/TheAccountHome.vue"),
       },
       {
         path: "posts",
@@ -49,17 +58,17 @@ const routes = [
           {
             path: "",
             name: "account_posts",
-            component: () => import("@/components/post/PostListAccount.vue"),
+            component: () => import("@/components/post/ThePostListAccount.vue"),
           },
           {
             path: "create",
             name: "post_create",
-            component: () => import("@/components/post/PostCreate.vue"),
+            component: () => import("@/components/post/ThePostCreate.vue"),
           },
           {
             path: ":postId",
             name: "post_edit",
-            component: () => import("@/components/post/PostEdit.vue"),
+            component: () => import("@/components/post/ThePostEdit.vue"),
             props: true,
           },
         ],
@@ -67,17 +76,17 @@ const routes = [
       {
         path: "comments",
         name: "account_comments",
-        component: () => import("@/components/account/AccountComments.vue"),
+        component: () => import("@/components/account/TheAccountComments.vue"),
       },
       {
         path: "avatar",
         name: "account_avatar",
-        component: () => import("@/components/account/AccountAvatar.vue"),
+        component: () => import("@/components/account/TheAccountAvatar.vue"),
       },
       {
         path: "password",
         name: "account_password",
-        component: () => import("@/components/account/AccountPassword.vue"),
+        component: () => import("@/components/account/TheAccountPassword.vue"),
       },
     ],
   },
