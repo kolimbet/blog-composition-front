@@ -26,12 +26,14 @@
     </div>
 
     <template v-if="hasPosts">
-      <div class="mb-3">
-        <PostPreviewAccount
-          v-for="post in postList.data"
-          :key="post.id"
-          :post="post"
-        />
+      <div class="account-post-list">
+        <TransitionGroup name="list-slide-left">
+          <PostPreviewAccount
+            v-for="post in postList.data"
+            :key="post.id"
+            :post="post"
+          />
+        </TransitionGroup>
       </div>
 
       <PaginationLine
@@ -54,7 +56,7 @@
 import BaseIconUpdate from "../base/BaseIconUpdate.vue";
 import BaseButtonPill from "../base/BaseButtonPill.vue";
 import ErrorSingle from "../inc/ErrorSingle.vue";
-import PostPreviewAccount from "../post/PostPreviewAccount.vue";
+import PostPreviewAccount from "./PostPreviewAccount.vue";
 import PaginationLine from "../inc/PaginationLine.vue";
 
 import { useRequest } from "@/composables/request";

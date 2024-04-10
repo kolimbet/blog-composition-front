@@ -29,20 +29,58 @@
   }
 }
 
-@keyframes rotation-360 {
-  0% {
-    transform: rotate(0deg);
-  }
-  50% {
-    transform: rotate(180deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+/* ------------------------- Posts -------------------------- */
+.account-post-list {
+  margin-bottom: 1rem;
 }
 
-.rotation-process {
-  animation: rotation-360 2s infinite linear;
+.account-post-list .post-preview {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 1.25rem;
+  padding: 0.75rem 0.75rem;
+  border-radius: 0.5rem;
+  border-width: 2px;
+  border-style: solid;
+  text-align: center;
+
+  & .label-id,
+  & .label-edit {
+    position: absolute;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    border-radius: 0.25rem;
+    color: white;
+  }
+  & .label-id {
+    top: -0.75rem;
+    left: -0.4rem;
+  }
+
+  & .label-edit {
+    bottom: -0.75rem;
+    right: -0.4rem;
+    padding-right: 0.35rem;
+  }
+
+  & .post-title {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    font-size: 1.15rem;
+    font-weight: 500;
+  }
+
+  & .post-excerpt {
+    margin-top: 0.5rem;
+    text-align: left;
+
+    & p {
+      margin-bottom: 0.5rem;
+    }
+    & p:last-child {
+      margin-bottom: 0;
+    }
+  }
 }
 
 .comment,
@@ -87,6 +125,22 @@
 }
 
 /* single animations */
+@keyframes rotation-360 {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.rotation-process {
+  animation: rotation-360 2s infinite linear;
+}
+
 .fade {
   &-enter-active,
   &-leave-active {
@@ -135,7 +189,30 @@ $folding-y-heights: 50, 300, 1000;
   }
 }
 
-/* list animations */
+/* ------------------------ list animations --------------------- */
+.list-slide-left {
+  &-move {
+    transition: all 1s linear;
+  }
+  &-enter-active,
+  &-leave-active {
+    transition: all 0.5s linear;
+  }
+  &-enter-from,
+  &-leave-to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  &-enter-active {
+    transition: all 0.5s 0.5s linear;
+    // overflow: hidden;
+  }
+  &-leave-active {
+    transition: all 0.5s linear;
+    // overflow: hidden;
+  }
+}
+
 $list-folding-y-heights: 100, 150;
 .list-folding-y {
   @each $height in $list-folding-y-heights {

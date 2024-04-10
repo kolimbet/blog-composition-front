@@ -49,7 +49,7 @@ const routes = [
           {
             path: "",
             name: "account_posts",
-            component: () => import("@/components/account/AccountPosts.vue"),
+            component: () => import("@/components/post/PostListAccount.vue"),
           },
           {
             path: "create",

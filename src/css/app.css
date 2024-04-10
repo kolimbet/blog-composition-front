@@ -15493,19 +15493,52 @@ textarea.form-control-lg {
   opacity: 0.8;
 }
 
-@keyframes rotation-360 {
-  0% {
-    transform: rotate(0deg);
-  }
-  50% {
-    transform: rotate(180deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+/* ------------------------- Posts -------------------------- */
+.account-post-list {
+  margin-bottom: 1rem;
 }
-.rotation-process {
-  animation: rotation-360 2s infinite linear;
+
+.account-post-list .post-preview {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 1.25rem;
+  padding: 0.75rem 0.75rem;
+  border-radius: 0.5rem;
+  border-width: 2px;
+  border-style: solid;
+  text-align: center;
+}
+.account-post-list .post-preview .label-id, .account-post-list .post-preview .label-edit {
+  position: absolute;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  border-radius: 0.25rem;
+  color: white;
+}
+.account-post-list .post-preview .label-id {
+  top: -0.75rem;
+  left: -0.4rem;
+}
+.account-post-list .post-preview .label-edit {
+  bottom: -0.75rem;
+  right: -0.4rem;
+  padding-right: 0.35rem;
+}
+.account-post-list .post-preview .post-title {
+  margin-left: 1rem;
+  margin-right: 1rem;
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+.account-post-list .post-preview .post-excerpt {
+  margin-top: 0.5rem;
+  text-align: left;
+}
+.account-post-list .post-preview .post-excerpt p {
+  margin-bottom: 0.5rem;
+}
+.account-post-list .post-preview .post-excerpt p:last-child {
+  margin-bottom: 0;
 }
 
 .comment,
@@ -15548,6 +15581,21 @@ textarea.form-control-lg {
 }
 
 /* single animations */
+@keyframes rotation-360 {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.rotation-process {
+  animation: rotation-360 2s infinite linear;
+}
+
 .fade-enter-active, .fade-leave-active {
   transition: all 0.5s linear;
 }
@@ -15606,7 +15654,24 @@ textarea.form-control-lg {
   overflow: hidden;
 }
 
-/* list animations */
+/* ------------------------ list animations --------------------- */
+.list-slide-left-move {
+  transition: all 1s linear;
+}
+.list-slide-left-enter-active, .list-slide-left-leave-active {
+  transition: all 0.5s linear;
+}
+.list-slide-left-enter-from, .list-slide-left-leave-to {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+.list-slide-left-enter-active {
+  transition: all 0.5s 0.5s linear;
+}
+.list-slide-left-leave-active {
+  transition: all 0.5s linear;
+}
+
 .list-folding-y-100-move {
   transition: all 1s linear;
 }
