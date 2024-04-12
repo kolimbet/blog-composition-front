@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 class="text-center">User account</h2>
+    <h2 class="text-center">Admin panel</h2>
 
     <div
       class="mb-0-75rem p-1 d-flex flex-wrap justify-content-center gap-0-75rem bg-blue"
@@ -24,15 +24,23 @@
 const navLinks = [
   {
     title: "Home",
-    name: "account_home",
+    name: "admin_home",
+  },
+  {
+    title: "Posts",
+    name: "admin_posts",
+  },
+  {
+    title: "Comments",
+    name: "admin_comments",
   },
   {
     title: "Avatar",
-    name: "account_avatar",
+    name: "admin_avatar",
   },
   {
     title: "Password",
-    name: "account_password",
+    name: "admin_password",
   },
 ];
 </script>

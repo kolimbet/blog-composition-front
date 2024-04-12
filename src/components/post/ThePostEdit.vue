@@ -148,7 +148,7 @@ import useVuelidate from "@vuelidate/core";
 import { required, minLength, maxLength, helpers } from "@vuelidate/validators";
 import { deltaMinLength } from "@/validators";
 import slug from "slug";
-import { apiPostItemAccount, apiPostUpdate } from "@/api";
+import { apiPostItemAdmin, apiPostUpdate } from "@/api";
 import _ from "lodash";
 import { dateFromTimestamp } from "@/service-functions";
 import { useMessage } from "@/composables/message";
@@ -254,7 +254,7 @@ function requestPostData(successFunc = null) {
   requestProcessing.value = true;
   reloadErrors();
 
-  apiPostItemAccount(props.postId)
+  apiPostItemAdmin(props.postId)
     .then((data) => {
       loadPostData(data);
       if (successFunc) successFunc();

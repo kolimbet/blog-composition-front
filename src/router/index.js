@@ -1,6 +1,7 @@
 import {
   getAuthorized,
   getInitiated,
+  getIsAdmin,
   actionInitApp,
 } from "@/composables/storeAuth";
 import { createRouter, createWebHistory } from "vue-router";
@@ -12,6 +13,7 @@ const routes = [
     component: () => import("@/components/post/ThePostFeed.vue"),
     meta: {
       requiresAuthorization: false,
+      forAdmin: false,
     },
   },
   {
@@ -20,6 +22,7 @@ const routes = [
     component: () => import("@/components/post/ThePostItem.vue"),
     meta: {
       requiresAuthorization: false,
+      forAdmin: false,
     },
     props: true,
   },
@@ -29,6 +32,7 @@ const routes = [
     component: () => import("@/components/auth/TheLoginPage.vue"),
     meta: {
       requiresAuthorization: false,
+      forAdmin: false,
     },
   },
   {
@@ -37,6 +41,7 @@ const routes = [
     component: () => import("@/components/auth/TheRegisterPage.vue"),
     meta: {
       requiresAuthorization: false,
+      forAdmin: false,
     },
   },
   {
@@ -44,6 +49,7 @@ const routes = [
     component: () => import("@/components/account/TheUserAccount.vue"),
     meta: {
       requiresAuthorization: true,
+      forAdmin: false,
     },
     children: [
       {
@@ -53,12 +59,38 @@ const routes = [
         component: () => import("@/components/account/TheAccountHome.vue"),
       },
       {
+        path: "avatar",
+        name: "account_avatar",
+        component: () => import("@/components/account/TheAccountAvatar.vue"),
+      },
+      {
+        path: "password",
+        name: "account_password",
+        component: () => import("@/components/account/TheAccountPassword.vue"),
+      },
+    ],
+  },
+  {
+    path: "/admin",
+    component: () => import("@/components/admin/TheAdminPanel.vue"),
+    meta: {
+      requiresAuthorization: true,
+      forAdmin: true,
+    },
+    children: [
+      {
+        path: "home",
+        alias: "",
+        name: "admin_home",
+        component: () => import("@/components/account/TheAccountHome.vue"),
+      },
+      {
         path: "posts",
         children: [
           {
             path: "",
-            name: "account_posts",
-            component: () => import("@/components/post/ThePostListAccount.vue"),
+            name: "admin_posts",
+            component: () => import("@/components/post/ThePostListAdmin.vue"),
           },
           {
             path: "create",
@@ -75,20 +107,29 @@ const routes = [
       },
       {
         path: "comments",
-        name: "account_comments",
-        component: () => import("@/components/account/TheAccountComments.vue"),
+        name: "admin_comments",
+        component: () => import("@/components/admin/TheAdminComments.vue"),
       },
       {
         path: "avatar",
-        name: "account_avatar",
+        name: "admin_avatar",
         component: () => import("@/components/account/TheAccountAvatar.vue"),
       },
       {
         path: "password",
-        name: "account_password",
+        name: "admin_password",
         component: () => import("@/components/account/TheAccountPassword.vue"),
       },
     ],
+  },
+  {
+    path: "/access-denied",
+    name: "access_denied",
+    component: () => import("@/components/TheAccessDenied.vue"),
+    meta: {
+      requiresAuthorization: false,
+      forAdmin: false,
+    },
   },
   {
     path: "/:pathMatch(.*)",
@@ -96,6 +137,7 @@ const routes = [
     component: () => import("@/components/ThePageNotFound.vue"),
     meta: {
       requiresAuthorization: false,
+      forAdmin: false,
     },
   },
 ];
@@ -125,7 +167,14 @@ function routing(to, next) {
     if (!getAuthorized.value) {
       // console.log("Router requiresAuthorization check redirect to: /login");
       next({ name: "login" });
-    } else next();
+    } else {
+      if (to.meta.forAdmin && !getIsAdmin.value) {
+        console.log("Router forAdmin check redirect to: /access-denied");
+        next({ name: "access_denied", query: { deniedURL: to.fullPath } });
+      } else {
+        next();
+      }
+    }
   } else {
     next();
   }

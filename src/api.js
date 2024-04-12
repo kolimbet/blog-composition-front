@@ -17,7 +17,7 @@ const sourceUrls = {
   userAvatar: "/api/user/avatar",
   images: "/api/images",
   posts: "/api/posts",
-  accountPosts: "/api/account/posts",
+  adminPosts: "/api/admin/posts",
 };
 
 let token = localStorage.getItem("token") ?? null;
@@ -255,7 +255,7 @@ export async function apiPostListFeed(page = 1) {
     axios
       .get(requestURL)
       .then(({ data }) => {
-        console.log("apiPostListFeed completed successfully", data);
+        // console.log("apiPostListFeed completed successfully", data);
         resolve(data);
       })
       .catch((err) => {
@@ -264,10 +264,10 @@ export async function apiPostListFeed(page = 1) {
   });
 }
 
-export async function apiPostListAccount(page = 1) {
+export async function apiPostListAdmin(page = 1) {
   return new Promise((resolve, reject) => {
     // reject("apiPostListAccount test stopper");
-    const requestURL = new URL(sourceUrls.accountPosts, backendDomain);
+    const requestURL = new URL(sourceUrls.adminPosts, backendDomain);
     if (page > 1) requestURL.searchParams.append("page", page);
     axios
       .get(requestURL)
@@ -281,11 +281,11 @@ export async function apiPostListAccount(page = 1) {
   });
 }
 
-export async function apiPostItemAccount(postId) {
+export async function apiPostItemAdmin(postId) {
   return new Promise((resolve, reject) => {
     // reject("apiPostItemAccount test stopper");
     axios
-      .get(sourceUrls.accountPosts + "/" + postId)
+      .get(sourceUrls.adminPosts + "/" + postId)
       .then(({ data }) => {
         // console.log("apiPostItemAccount completed successfully", data);
         resolve(data);
@@ -300,7 +300,7 @@ export async function apiPostStore(post) {
   return new Promise((resolve, reject) => {
     // reject("apiPostStore test stopper");
     axios
-      .post(sourceUrls.accountPosts, post)
+      .post(sourceUrls.adminPosts, post)
       .then(({ data }) => {
         // console.log("apiPostStore completed successfully", data);
         resolve(data);
@@ -315,7 +315,7 @@ export async function apiPostUpdate(postId, post) {
   return new Promise((resolve, reject) => {
     // reject("apiPostUpdate test stopper");
     axios
-      .post(sourceUrls.accountPosts + "/" + postId, post)
+      .post(sourceUrls.adminPosts + "/" + postId, post)
       .then(({ data }) => {
         // console.log("apiPostUpdate completed successfully", data);
         resolve(data);

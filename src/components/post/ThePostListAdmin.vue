@@ -28,7 +28,7 @@
     <template v-if="hasPosts">
       <div class="account-post-list">
         <TransitionGroup name="list-slide-left">
-          <PostPreviewAccount
+          <PostPreviewAdmin
             v-for="post in postList.data"
             :key="post.id"
             :post="post"
@@ -56,13 +56,13 @@
 import BaseIconUpdate from "../base/BaseIconUpdate.vue";
 import BaseButtonPill from "../base/BaseButtonPill.vue";
 import ErrorSingle from "../inc/ErrorSingle.vue";
-import PostPreviewAccount from "./PostPreviewAccount.vue";
+import PostPreviewAdmin from "./PostPreviewAdmin.vue";
 import PaginationLine from "../inc/PaginationLine.vue";
 
 import { useRequest } from "@/composables/request";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import { apiPostListAccount } from "@/api";
+import { apiPostListAdmin } from "@/api";
 
 const postList = ref(null);
 
@@ -97,7 +97,7 @@ function requestPosts() {
   requestProcessing.value = true;
   reloadErrors();
 
-  apiPostListAccount(page.value)
+  apiPostListAdmin(page.value)
     .then((posts) => {
       postList.value = posts;
     })

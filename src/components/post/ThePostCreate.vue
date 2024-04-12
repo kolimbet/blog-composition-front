@@ -28,7 +28,7 @@
               <button
                 @click="
                   $router.push({
-                    name: 'account_posts',
+                    name: 'admin_posts',
                   })
                 "
                 title="Go to the list of posts"

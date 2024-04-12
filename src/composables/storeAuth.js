@@ -20,6 +20,7 @@ export const getAvatarUrl = computed(() =>
 );
 export const getAvatarId = computed(() => user.value.avatar_id);
 export const getUserName = computed(() => user.value?.name ?? "...");
+export const getIsAdmin = computed(() => +user.value?.is_admin ?? 0);
 
 // Setters
 const setAuthData = (userData = null) => {

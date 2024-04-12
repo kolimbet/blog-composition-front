@@ -6,7 +6,7 @@
         class="rounded-pill h-8 d-flex flex-wrap justify-content-center align-items-center bg-blue-light"
       >
         <RouterLink
-          :to="{ name: 'account_home' }"
+          :to="{ name: nameRouteToPanel }"
           class="d-flex align-items-center w-max text-dark text-secondary-hover text-decoration-none fw-bold"
           title="User Page"
         >
@@ -57,10 +57,15 @@ import {
   getAuthorized,
   getAvatarUrl,
   getUserName,
+  getIsAdmin,
   actionLogout,
 } from "@/composables/storeAuth";
-import { nextTick } from "vue";
+import { computed, nextTick } from "vue";
 import { parseErrorObject } from "@/service-functions";
+
+const nameRouteToPanel = computed(() =>
+  getIsAdmin.value ? "admin_home" : "account_home"
+);
 
 const router = useRouter();
 
