@@ -15,7 +15,8 @@ const sourceUrls = {
   userPasswordCheck: "/api/user/check-password",
   userPasswordUpdate: "/api/user/update-password",
   userAvatar: "/api/user/avatar",
-  images: "/api/images",
+  avatars: "/api/avatars",
+  postImages: "/api/images",
   posts: "/api/posts",
   adminPosts: "/api/admin/posts",
 };
@@ -194,16 +195,14 @@ export async function apiUserAvatarDelete() {
 }
 
 // ---------------------------     Images    --------------------------- //
-export async function apiImageList(postId) {
+// ---------------------------     Avatars    ---------------------------//
+export async function apiAvatarList() {
   return new Promise((resolve, reject) => {
-    // reject("apiImageList test stopper");
-    const request = axios.get(
-      sourceUrls.images + (postId ? `/post/${postId}` : "/avatars")
-    );
-
-    request
+    // reject("apiAvatarList test stopper");
+    axios
+      .get(sourceUrls.avatars)
       .then(({ data }) => {
-        // console.log("apiImageList completed successfully", data);
+        // console.log("apiAvatarList completed successfully", data);
         resolve(data);
       })
       .catch((err) => {
@@ -212,17 +211,17 @@ export async function apiImageList(postId) {
   });
 }
 
-export async function apiImageStore(image) {
+export async function apiAvatarStore(image) {
   return new Promise((resolve, reject) => {
-    // reject("apiImageStore test stopper");
+    // reject("apiAvatarStore test stopper");
     axios
-      .post(sourceUrls.images, image, {
+      .post(sourceUrls.avatars, image, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       })
       .then(({ data }) => {
-        // console.log("apiImageStore completed successfully", data);
+        // console.log("apiAvatarStore completed successfully", data);
         resolve(data);
       })
       .catch((err) => {
@@ -231,13 +230,13 @@ export async function apiImageStore(image) {
   });
 }
 
-export async function apiImageDelete(imageId) {
+export async function apiAvatarDelete(imageId) {
   return new Promise((resolve, reject) => {
-    // reject("apiImageDelete test stopper");
+    // reject("apiAvatarDelete test stopper");
     axios
-      .delete(sourceUrls.images + `/${imageId}`)
+      .delete(sourceUrls.avatars + `/${imageId}`)
       .then((/* { data } */) => {
-        // console.log("apiImageDelete completed successfully", data);
+        // console.log("apiAvatarDelete completed successfully", data);
         resolve(true);
       })
       .catch((err) => {
