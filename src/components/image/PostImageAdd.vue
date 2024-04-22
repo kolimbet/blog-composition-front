@@ -50,17 +50,19 @@
 import ErrorSingle from "../inc/ErrorSingle.vue";
 import ErrorList from "../inc/ErrorList.vue";
 
-import { defineProps, defineEmits, ref, computed, watch, nextTick } from "vue";
+import { computed, defineEmits, defineProps, nextTick, ref, watch } from "vue";
 import { useRequest } from "@/composables/request";
 import useVuelidate from "@vuelidate/core";
 import { helpers } from "@vuelidate/validators";
-import { validateImageToAvatar } from "@/validators";
-import { apiAvatarStore } from "@/api";
+import { validateImageToPost } from "@/validators";
+import { apiImageStore } from "@/api";
 
 const props = defineProps({
   isOpen: Boolean,
+  postId: [String, Number, null],
+  imageFolder: [String, null],
 });
-const emit = defineEmits(["close", "addImage"]);
+const emit = defineEmits(["close", "addImage", "update:imageFolder"]);
 
 const refImageInput = ref(null);
 
@@ -77,18 +79,18 @@ const {
   reloadErrors,
 } = useRequest();
 
-const avatarAddRules = computed(() => ({
+const imageAddRules = computed(() => ({
   form: {
     image: {
       checkImage: helpers.withMessage(
         ({ $response }) => $response?.message || "Invalid Data",
-        validateImageToAvatar
+        validateImageToPost
       ),
     },
   },
 }));
 const v$ = useVuelidate(
-  avatarAddRules,
+  imageAddRules,
   { form },
   {
     $lazy: true,
@@ -113,11 +115,24 @@ function storeImage() {
       let formData = new FormData();
       formData.append("image", form.value.image);
       formData.append("image_name", form.value.image.name);
+      if (props.postId) {
+        formData.append("post_id", props.postId);
+      }
+      if (props.imageFolder) {
+        formData.append("image_path", props.imageFolder);
+      }
 
-      apiAvatarStore(formData)
+      apiImageStore(formData)
         .then((data) => {
-          // !!!
           emit("addImage", data["image"]);
+          if (!props.imageFolder) {
+            if (!data["image_path"]) {
+              throw new Error(
+                "Response error: image_path of the new image was not received"
+              );
+            }
+            emit("update:imageFolder", String(data["image_path"]));
+          }
           emit("close");
         })
         .catch((err) => {

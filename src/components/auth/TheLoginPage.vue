@@ -130,6 +130,7 @@ const v$ = useVuelidate(
   { form },
   {
     $lazy: true,
+    $scope: false,
   }
 );
 

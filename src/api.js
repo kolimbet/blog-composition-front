@@ -245,6 +245,78 @@ export async function apiAvatarDelete(imageId) {
   });
 }
 
+// ---------------------------   Post Images   ---------------------------//
+export async function apiImageList(postId) {
+  return new Promise((resolve, reject) => {
+    // reject("apiImageList test stopper");
+    axios
+      .get(sourceUrls.postImages + "/post/" + postId)
+      .then(({ data }) => {
+        // console.log("apiImageList completed successfully", data);
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(parseApiError(err));
+      });
+  });
+}
+
+export async function apiImageStore(image) {
+  return new Promise((resolve, reject) => {
+    // reject("apiImageStore test stopper");
+    axios
+      .post(sourceUrls.postImages, image, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then(({ data }) => {
+        // console.log("apiImageStore completed successfully", data);
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(parseApiError(err));
+      });
+  });
+}
+
+export async function apiImageDelete(imageId) {
+  return new Promise((resolve, reject) => {
+    // reject(
+    //   "apiImageDelete test stopper" +
+    //     " - " +
+    //     sourceUrls.postImages +
+    //     `/${imageId}`
+    // );
+    axios
+      .delete(sourceUrls.postImages + `/${imageId}`)
+      .then((/* { data } */) => {
+        // console.log("apiImageDelete completed successfully", data);
+        resolve(true);
+      })
+      .catch((err) => {
+        reject(parseApiError(err));
+      });
+  });
+}
+
+export async function apiImageClearNonAttached(imageFolder, imageCounter) {
+  return new Promise((resolve, reject) => {
+    // reject("apiImageDelete test stopper");
+    axios
+      .post(sourceUrls.postImages + "/clear", {
+        image_path: imageFolder,
+        image_counter: imageCounter,
+      })
+      .then((/* { data } */) => {
+        // console.log("apiImageDelete completed successfully", data);
+        resolve(true);
+      })
+      .catch((err) => {
+        reject(parseApiError(err));
+      });
+  });
+}
 /* ------------------------- Posts ------------------------ */
 export async function apiPostListFeed(page = 1) {
   return new Promise((resolve, reject) => {
@@ -290,6 +362,7 @@ export async function apiPostItemAdmin(postId) {
         resolve(data);
       })
       .catch((err) => {
+        console.log("apiPostItemAccount failed", err);
         reject(parseApiError(err));
       });
   });

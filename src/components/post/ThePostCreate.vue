@@ -137,6 +137,15 @@
         >
       </div>
 
+      <ThePostImageList
+        :image-folder="form.image_path"
+        @update:image-folder="updateImageFolder($event)"
+        :image-list="imageList"
+        @add-image="addImageToList($event)"
+        @delete-image="deleteImageFromList($event)"
+        class="mb-4"
+      />
+
       <div class="mb-4">
         <BaseRequestButton
           @click="storePost()"
@@ -153,8 +162,9 @@ import ErrorSingle from "../inc/ErrorSingle.vue";
 import ErrorList from "../inc/ErrorList.vue";
 import BaseRequestButton from "../base/BaseRequestButton.vue";
 import EditorPost from "../quill/EditorPost.vue";
+import ThePostImageList from "../image/ThePostImageList.vue";
 
-import { computed, ref } from "vue";
+import { computed, onBeforeUnmount, ref } from "vue";
 import { useRequest } from "@/composables/request";
 import { Delta } from "quill/core";
 import useVuelidate from "@vuelidate/core";
@@ -162,7 +172,7 @@ import { required, minLength, maxLength, helpers } from "@vuelidate/validators";
 import { deltaMinLength } from "@/validators";
 import slug from "slug";
 import _ from "lodash";
-import { apiPostStore } from "@/api";
+import { apiImageClearNonAttached, apiPostStore } from "@/api";
 
 const form = ref({
   title: "",
@@ -174,6 +184,8 @@ const form = ref({
   is_published: false,
   image_path: null,
 });
+
+const imageList = ref([]);
 
 const postStoreIsCompleted = ref(false);
 const newPostId = ref(false);
@@ -212,6 +224,7 @@ const v$ = useVuelidate(
   { form },
   {
     $lazy: true,
+    $scope: false,
   }
 );
 
@@ -232,11 +245,16 @@ function storePost() {
 
   v$.value.$validate().then(() => {
     if (v$.value.$invalid) {
+      console.log("StorePost -> validation has been failed");
       requestProcessing.value = false;
     } else {
+      console.log("StorePost -> validation has been completed successfully");
+
       const data = _.cloneDeep(form.value);
       data.excerpt_raw = JSON.stringify(data.excerpt_raw);
       data.content_raw = JSON.stringify(data.content_raw);
+      data["image_counter"] = imageList.value.length;
+      console.log(data);
 
       apiPostStore(data)
         .then((postId) => {
@@ -252,4 +270,38 @@ function storePost() {
     }
   });
 }
+
+function deleteImageFromList(imageId) {
+  imageList.value.splice(
+    imageList.value.findIndex((img) => img.id === imageId),
+    1
+  );
+}
+function addImageToList(newImage) {
+  imageList.value.push(newImage);
+}
+
+function updateImageFolder(newFolder) {
+  if (!form.value.image_path && newFolder) {
+    form.value.image_path = newFolder;
+  }
+}
+
+function clearNotAttachedImages() {
+  if (!postStoreIsCompleted.value && form.value.image_path) {
+    console.log(
+      `clearNotAttached() -> apiImageClearNonAttached(${form.value.image_path})`
+    );
+    apiImageClearNonAttached(
+      form.value.image_path,
+      imageList.value.length
+    ).catch((err) => {
+      console.log("failed clearNotAttached(): " + err);
+    });
+  }
+}
+
+onBeforeUnmount(() => {
+  clearNotAttachedImages();
+});
 </script>

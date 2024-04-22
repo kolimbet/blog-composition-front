@@ -123,6 +123,16 @@
       </div>
     </div>
 
+    <ThePostImageList
+      :post-id="props.postId"
+      :image-folder="form.image_path"
+      @update:image-folder="updateImageFolder($event)"
+      :image-list="imageList"
+      @add-image="addImageToList($event)"
+      @delete-image="deleteImageFromList($event)"
+      class="mb-4"
+    />
+
     <div class="mb-4">
       <BaseRequestButton
         @click="updatePost()"
@@ -140,6 +150,7 @@ import ErrorList from "../inc/ErrorList.vue";
 import BaseRequestButton from "../base/BaseRequestButton.vue";
 import EditorPost from "../quill/EditorPost.vue";
 import BaseIconUpdate from "../base/BaseIconUpdate.vue";
+import ThePostImageList from "../image/ThePostImageList.vue";
 
 import { computed, defineProps, onMounted, ref } from "vue";
 import { Delta } from "quill/core";
@@ -167,6 +178,8 @@ const form = ref({
   is_published: false,
   image_path: null,
 });
+
+const imageList = ref([]);
 
 const postData = ref(null);
 
@@ -207,6 +220,7 @@ const v$ = useVuelidate(
   { form },
   {
     $lazy: true,
+    $scope: false,
   }
 );
 
@@ -237,16 +251,18 @@ function generateSlug() {
   this.form.slug = slug(this.form.title);
 }
 
-function loadPostData(newData) {
-  newData.excerpt_raw = new Delta(JSON.parse(newData.excerpt_raw));
-  newData.content_raw = new Delta(JSON.parse(newData.content_raw));
-  newData.is_published = Boolean(newData.is_published);
-  // console.log(newData);
-  postData.value = _.cloneDeep(newData);
+function loadPostData({ post, images }) {
+  post.excerpt_raw = new Delta(JSON.parse(post.excerpt_raw));
+  post.content_raw = new Delta(JSON.parse(post.content_raw));
+  post.is_published = Boolean(post.is_published);
+  // console.log(post);
+  postData.value = _.cloneDeep(post);
 
   for (let key in form.value) {
-    form.value[key] = newData[key];
+    form.value[key] = post[key];
   }
+
+  imageList.value = images ?? [];
 }
 
 function requestPostData(successFunc = null) {
@@ -303,6 +319,22 @@ function updatePost() {
         });
     }
   });
+}
+
+function deleteImageFromList(imageId) {
+  imageList.value.splice(
+    imageList.value.findIndex((img) => img.id === imageId),
+    1
+  );
+}
+function addImageToList(newImage) {
+  imageList.value.push(newImage);
+}
+
+function updateImageFolder(newFolder) {
+  if (!form.value.image_path && newFolder) {
+    form.value.image_path = newFolder;
+  }
 }
 
 onMounted(() => {

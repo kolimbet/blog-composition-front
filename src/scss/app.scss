@@ -1,5 +1,6 @@
 @import "bs5-custom.scss";
 @import "../../node_modules/font-awesome/css/font-awesome.min.css";
+@import "quill-import.scss";
 
 .top-nav-bg-gradient {
   background: rgb(30, 64, 175);
@@ -30,20 +31,16 @@
 }
 
 /* ------------------------- Posts -------------------------- */
+/* ---- feed ---- */
 .feed-post-list {
   margin-bottom: 1.5rem;
 }
 
 .feed-post-list .post-preview {
-  margin-bottom: 1.5rem;
-
-  & .post-excerpt {
-    & p {
-      margin-bottom: 0.5rem;
-    }
-  }
+  margin-bottom: 2rem;
 }
 
+/* ---- account ---- */
 .account-post-list {
   margin-bottom: 1rem;
 }
@@ -87,16 +84,23 @@
   & .post-excerpt {
     margin-top: 0.5rem;
     text-align: left;
-
-    & p {
-      margin-bottom: 0.5rem;
-    }
-    & p:last-child {
-      margin-bottom: 0;
-    }
   }
 }
 
+.copy-image-link {
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* ------------------------- Comments -------------------------- */
 .comment,
 .add-comment {
   padding: 0.7rem 1.5rem 1rem;

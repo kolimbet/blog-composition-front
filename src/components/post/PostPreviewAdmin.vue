@@ -39,7 +39,7 @@
       <div
         v-if="showExcerpt"
         v-html="props.post.excerpt_html"
-        class="post-excerpt"
+        class="post-excerpt ql-output"
       ></div>
     </Transition>
   </div>

@@ -5,7 +5,6 @@
 <script setup>
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
-import "@/css/quill-custom.css";
 
 import Quill from "quill";
 import { Delta } from "quill/core";

@@ -30,7 +30,13 @@ export function deltaMinLength(param) {
       }
 
       let fullText = "";
-      value.ops.forEach((elt) => (fullText += elt.insert.replace(/\n/g, "")));
+      value.ops.forEach((elt) => {
+        if (typeof elt.insert === "string" || elt.insert instanceof String) {
+          fullText += elt.insert.replace(/\n/g, "");
+        } else {
+          fullText += "?";
+        }
+      });
 
       if (fullText.length < param) {
         result.message = `The text must be at least ${param} characters long`;
@@ -73,6 +79,28 @@ function checkImageType(image) {
 }
 
 export const validateImageToAvatar = (value) => {
+  let result = {
+    $valid: false,
+    message: "",
+  };
+
+  // console.log("validateImageToAvatar", value);
+  if (value === undefined || value === "" || !value) {
+    result.message = "The file is not selected";
+    return result;
+  }
+
+  const sizeCheck = checkImageSize(value);
+  if (!sizeCheck.$valid) return sizeCheck;
+
+  const typeCheck = checkImageType(value);
+  if (!typeCheck.$valid) return typeCheck;
+
+  result.$valid = true;
+  return result;
+};
+
+export const validateImageToPost = (value) => {
   let result = {
     $valid: false,
     message: "",

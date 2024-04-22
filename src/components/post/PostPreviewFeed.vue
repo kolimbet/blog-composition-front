@@ -15,7 +15,7 @@
       ><span>{{ dateFromTimestamp(props.post.published_at) }}</span>
     </div>
 
-    <div v-html="props.post.excerpt_html" class="post-excerpt"></div>
+    <div v-html="props.post.excerpt_html" class="post-excerpt ql-output"></div>
 
     <div
       class="d-flex justify-content-between align-items-center px-0-75rem py-2 bg-blue text-white rounded-2"
