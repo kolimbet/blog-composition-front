@@ -397,3 +397,18 @@ export async function apiPostUpdate(postId, post) {
       });
   });
 }
+
+export async function apiPostDelete(postId) {
+  return new Promise((resolve, reject) => {
+    // reject("apiPostDelete test stopper");
+    axios
+      .delete(sourceUrls.adminPosts + "/" + postId)
+      .then(({ data }) => {
+        // console.log("apiPostDelete completed successfully", data);
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(parseApiError(err));
+      });
+  });
+}

@@ -32,114 +32,128 @@
       />
     </div>
 
-    <div class="mb-4">
-      <label for="form-title" class="fs-sm text-secondary">Title</label>
-      <input
-        v-model="form.title"
-        id="form-title"
-        type="text"
-        class="form-control"
-        placeholder="Title"
-      />
+    <Transition name="folding-y-1000" mode="out-in">
+      <div v-if="postData">
+        <div class="mb-4">
+          <label for="form-title" class="fs-sm text-secondary">Title</label>
+          <input
+            v-model="form.title"
+            id="form-title"
+            type="text"
+            class="form-control"
+            placeholder="Title"
+          />
 
-      <ErrorList
-        :error-list="v$.form.title.$errors"
-        :reload-trigger="triggerForReloadingErrors"
-      />
-    </div>
+          <ErrorList
+            :error-list="v$.form.title.$errors"
+            :reload-trigger="triggerForReloadingErrors"
+          />
+        </div>
 
-    <!-- slug -->
-    <div class="mb-4">
-      <label for="form-slug" class="fs-sm text-secondary">Slug</label>
-      <input
-        v-model="form.slug"
-        id="form-slug"
-        type="text"
-        class="form-control"
-        placeholder="Slug"
-      />
+        <!-- slug -->
+        <div class="mb-4">
+          <label for="form-slug" class="fs-sm text-secondary">Slug</label>
+          <input
+            v-model="form.slug"
+            id="form-slug"
+            type="text"
+            class="form-control"
+            placeholder="Slug"
+          />
 
-      <ErrorList
-        :error-list="v$.form.slug.$errors"
-        :reload-trigger="triggerForReloadingErrors"
-      />
+          <ErrorList
+            :error-list="v$.form.slug.$errors"
+            :reload-trigger="triggerForReloadingErrors"
+          />
 
-      <div class="mt-2">
-        <button
-          @click="generateSlug()"
-          type="submit"
-          class="w-56 p-px mt-px mx-auto d-flex justify-content-center align-items-center rounded-md border border-secondary border-green-hover border-opacity-75 bg-secondary bg-green-hover rounded-2 text-white cursor-pointer"
+          <div class="mt-2">
+            <button
+              @click="generateSlug()"
+              type="submit"
+              class="w-56 p-px mt-px mx-auto d-flex justify-content-center align-items-center rounded-md border border-secondary border-green-hover border-opacity-75 bg-secondary bg-green-hover rounded-2 text-white cursor-pointer"
+            >
+              <i class="fa fa-clone me-1" aria-hidden="true"></i>
+              Generate from Title
+            </button>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="fs-sm text-secondary">Excerpt</label>
+          <EditorPost
+            v-model:content="form.excerpt_raw"
+            @update:html="form.excerpt_html = $event"
+            placeholder="Excerpt"
+          />
+
+          <ErrorList
+            :error-list="v$.form.excerpt_raw.$errors"
+            :reload-trigger="triggerForReloadingErrors"
+          />
+        </div>
+
+        <div class="mb-4">
+          <label class="fs-sm text-secondary">Excerpt</label>
+          <EditorPost
+            v-model:content="form.content_raw"
+            @update:html="form.content_html = $event"
+            placeholder="Excerpt"
+          />
+
+          <ErrorList
+            :error-list="v$.form.content_raw.$errors"
+            :reload-trigger="triggerForReloadingErrors"
+          />
+        </div>
+
+        <div
+          class="mb-4 d-flex justify-content-between align-items-baseline gap-2"
         >
-          <i class="fa fa-clone me-1" aria-hidden="true"></i>
-          Generate from Title
-        </button>
-      </div>
-    </div>
+          <div class="form-check">
+            <input
+              v-model="form.is_published"
+              id="form-is-published"
+              type="checkbox"
+              class="form-check-input"
+              title="is published"
+            />
+            <label for="form-is-published" class="form-check-label"
+              >is published</label
+            >
+          </div>
 
-    <div class="mb-4">
-      <label class="fs-sm text-secondary">Excerpt</label>
-      <EditorPost
-        v-model:content="form.excerpt_raw"
-        @update:html="form.excerpt_html = $event"
-        placeholder="Excerpt"
-      />
+          <div v-if="publishedAt" class="fs-sm text-secondary">
+            <span class="me-2">Published:</span> {{ publishedAt }}
+          </div>
+        </div>
 
-      <ErrorList
-        :error-list="v$.form.excerpt_raw.$errors"
-        :reload-trigger="triggerForReloadingErrors"
-      />
-    </div>
-
-    <div class="mb-4">
-      <label class="fs-sm text-secondary">Excerpt</label>
-      <EditorPost
-        v-model:content="form.content_raw"
-        @update:html="form.content_html = $event"
-        placeholder="Excerpt"
-      />
-
-      <ErrorList
-        :error-list="v$.form.content_raw.$errors"
-        :reload-trigger="triggerForReloadingErrors"
-      />
-    </div>
-
-    <div class="mb-4 d-flex justify-content-between align-items-baseline gap-2">
-      <div class="form-check">
-        <input
-          v-model="form.is_published"
-          id="form-is-published"
-          type="checkbox"
-          class="form-check-input"
-          title="is published"
+        <ThePostImageList
+          :post-id="props.postId"
+          :image-folder="form.image_path"
+          @update:image-folder="updateImageFolder($event)"
+          :image-list="imageList"
+          @add-image="addImageToList($event)"
+          @delete-image="deleteImageFromList($event)"
+          class="mb-4"
         />
-        <label for="form-is-published" class="form-check-label"
-          >is published</label
-        >
+
+        <div class="mb-4">
+          <BaseRequestButton
+            @click="updatePost()"
+            :text="'Update'"
+            :processing="requestProcessing"
+          />
+        </div>
+        <div class="mb-4">
+          <BaseRequestButton
+            @click="deletePost()"
+            :text="'Delete'"
+            :processing="requestProcessing"
+            :role="'delete'"
+          />
+        </div>
       </div>
-
-      <div v-if="publishedAt" class="fs-sm text-secondary">
-        <span class="me-2">Published:</span> {{ publishedAt }}
-      </div>
-    </div>
-
-    <ThePostImageList
-      :post-id="props.postId"
-      :image-folder="form.image_path"
-      @update:image-folder="updateImageFolder($event)"
-      :image-list="imageList"
-      @add-image="addImageToList($event)"
-      @delete-image="deleteImageFromList($event)"
-      class="mb-4"
-    />
-
-    <div class="mb-4">
-      <BaseRequestButton
-        @click="updatePost()"
-        :text="'Update'"
-        :processing="requestProcessing"
-      />
-    </div>
+    </Transition>
   </div>
 </template>
 
@@ -159,10 +173,11 @@ import useVuelidate from "@vuelidate/core";
 import { required, minLength, maxLength, helpers } from "@vuelidate/validators";
 import { deltaMinLength } from "@/validators";
 import slug from "slug";
-import { apiPostItemAdmin, apiPostUpdate } from "@/api";
+import { apiPostDelete, apiPostItemAdmin, apiPostUpdate } from "@/api";
 import _ from "lodash";
 import { dateFromTimestamp } from "@/service-functions";
 import { useMessage } from "@/composables/message";
+import { useRouter } from "vue-router";
 
 const props = defineProps({
   postId: [Number, String],
@@ -183,6 +198,9 @@ const imageList = ref([]);
 
 const postData = ref(null);
 
+/**
+ * @type {HTMLElement|null} refMessage.value
+ */
 const { refMessage, messageDisplay, messageText, messageType, messageCreate } =
   useMessage();
 
@@ -195,6 +213,8 @@ const {
   setError,
   reloadErrors,
 } = useRequest();
+
+const router = useRouter();
 
 const postUpdateRules = computed(() => ({
   form: {
@@ -255,7 +275,6 @@ function loadPostData({ post, images }) {
   post.excerpt_raw = new Delta(JSON.parse(post.excerpt_raw));
   post.content_raw = new Delta(JSON.parse(post.content_raw));
   post.is_published = Boolean(post.is_published);
-  // console.log(post);
   postData.value = _.cloneDeep(post);
 
   for (let key in form.value) {
@@ -319,6 +338,37 @@ function updatePost() {
         });
     }
   });
+}
+
+function deletePost() {
+  if (confirm("Are you sure you want to delete the post&")) {
+    if (requestProcessing.value) return;
+    requestProcessing.value = true;
+    reloadErrors();
+
+    apiPostDelete(props.postId)
+      .then(() => {
+        postData.value = null;
+
+        messageCreate(
+          `Post #${props.postId} has been successfully deleted`,
+          "success"
+        );
+        refMessage.value.addEventListener(
+          "click",
+          () => {
+            router.push({ name: "admin_posts" });
+          },
+          { once: true }
+        );
+      })
+      .catch((err) => {
+        setError(err);
+      })
+      .finally(() => {
+        requestProcessing.value = false;
+      });
+  }
 }
 
 function deleteImageFromList(imageId) {

@@ -110,6 +110,7 @@
                 @click="register()"
                 :text="'Register'"
                 :processing="requestProcessing"
+                :role="'create'"
               />
             </div>
           </div>

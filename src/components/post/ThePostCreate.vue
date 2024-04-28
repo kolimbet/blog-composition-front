@@ -245,16 +245,12 @@ function storePost() {
 
   v$.value.$validate().then(() => {
     if (v$.value.$invalid) {
-      console.log("StorePost -> validation has been failed");
       requestProcessing.value = false;
     } else {
-      console.log("StorePost -> validation has been completed successfully");
-
       const data = _.cloneDeep(form.value);
       data.excerpt_raw = JSON.stringify(data.excerpt_raw);
       data.content_raw = JSON.stringify(data.content_raw);
       data["image_counter"] = imageList.value.length;
-      console.log(data);
 
       apiPostStore(data)
         .then((postId) => {
@@ -289,9 +285,9 @@ function updateImageFolder(newFolder) {
 
 function clearNotAttachedImages() {
   if (!postStoreIsCompleted.value && form.value.image_path) {
-    console.log(
-      `clearNotAttached() -> apiImageClearNonAttached(${form.value.image_path})`
-    );
+    // console.log(
+    //   `clearNotAttached() -> apiImageClearNonAttached(${form.value.image_path})`
+    // );
     apiImageClearNonAttached(
       form.value.image_path,
       imageList.value.length
