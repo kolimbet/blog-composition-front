@@ -352,6 +352,21 @@ export async function apiPostListAdmin(page = 1) {
   });
 }
 
+export async function apiPostItemFeed(postSlug) {
+  return new Promise((resolve, reject) => {
+    // reject("apiPostItemFeed test stopper");
+    axios
+      .get(sourceUrls.posts + "/" + postSlug)
+      .then(({ data }) => {
+        // console.log("apiPostItemFeed completed successfully", data);
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(parseApiError(err));
+      });
+  });
+}
+
 export async function apiPostItemAdmin(postId) {
   return new Promise((resolve, reject) => {
     // reject("apiPostItemAccount test stopper");

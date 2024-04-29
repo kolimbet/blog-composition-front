@@ -31,6 +31,20 @@
 }
 
 /* ------------------------- Posts -------------------------- */
+.post-author-label {
+  font-size: $sm-font-size;
+  font-weight: 600;
+  color: $gray-700;
+  text-align: center;
+
+  img {
+    object-fit: contain;
+    width: 60px;
+    height: 60px;
+    margin: 0 auto;
+  }
+}
+
 /* ---- feed ---- */
 .feed-post-list {
   margin-bottom: 1.5rem;
@@ -38,6 +52,18 @@
 
 .feed-post-list .post-preview {
   margin-bottom: 2rem;
+}
+
+.post-item {
+  .post-excerpt {
+    font-size: 1.1rem;
+    font-style: italic;
+    margin-bottom: 1rem;
+  }
+
+  .post-content {
+    margin-bottom: 1rem;
+  }
 }
 
 /* ---- account ---- */

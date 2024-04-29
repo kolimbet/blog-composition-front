@@ -15513,6 +15513,7 @@ textarea.form-control-lg {
   -o-object-fit: contain;
      object-fit: contain;
   width: 100%;
+  margin: 0.5rem auto;
 }
 
 .ql-editor img {
@@ -16050,6 +16051,20 @@ textarea.form-control-lg {
 }
 
 /* ------------------------- Posts -------------------------- */
+.post-author-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #495057;
+  text-align: center;
+}
+.post-author-label img {
+  -o-object-fit: contain;
+     object-fit: contain;
+  width: 60px;
+  height: 60px;
+  margin: 0 auto;
+}
+
 /* ---- feed ---- */
 .feed-post-list {
   margin-bottom: 1.5rem;
@@ -16057,6 +16072,15 @@ textarea.form-control-lg {
 
 .feed-post-list .post-preview {
   margin-bottom: 2rem;
+}
+
+.post-item .post-excerpt {
+  font-size: 1.1rem;
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+.post-item .post-content {
+  margin-bottom: 1rem;
 }
 
 /* ---- account ---- */
