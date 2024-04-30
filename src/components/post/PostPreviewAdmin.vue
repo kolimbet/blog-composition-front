@@ -2,6 +2,11 @@
   <div class="post-preview" :class="[classesOfCard]">
     <div class="label-id" :class="[classesOfLabel]">#{{ props.post.id }}</div>
 
+    <div class="label-author" :class="classesOfLabel">
+      <img :src="authorAvatarURL" :class="classesOfLabelImg" />
+      <span>{{ post.author.name }}</span>
+    </div>
+
     <div class="label-edit" :class="[classesOfLabel]">
       <RouterLink
         :to="{
@@ -59,6 +64,15 @@ const classesOfCard = computed(() =>
 );
 const classesOfLabel = computed(() =>
   props.post.is_published ? "bg-blue" : "bg-secondary"
+);
+const classesOfLabelImg = computed(() =>
+  props.post.is_published ? "border-blue" : "border-secondary"
+);
+
+const authorAvatarURL = computed(() =>
+  props.post?.author?.avatar
+    ? props.post.author.avatar.full_url
+    : "/images/default_avatar.png"
 );
 
 function toggleExcerpt() {

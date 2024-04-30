@@ -1,18 +1,27 @@
 <template>
   <div class="post-preview">
-    <h3 class="mb-0">
-      <RouterLink
-        :to="{
-          name: 'post',
-          params: { postSlug: props.post.slug || props.post.id },
-        }"
-        >{{ props.post.title }}</RouterLink
-      >
-    </h3>
+    <div class="mb-2 d-flex justify-content-between align-items-center gap-3">
+      <div>
+        <h3 class="mb-2">
+          <RouterLink
+            :to="{
+              name: 'post',
+              params: { postSlug: props.post.slug || props.post.id },
+            }"
+            >{{ props.post.title }}</RouterLink
+          >
+        </h3>
 
-    <div class="mb-2 text-secondary fs-sm">
-      <i class="fa fa-clock-o me-1" aria-hidden="true"></i
-      ><span>{{ dateFromTimestamp(props.post.published_at) }}</span>
+        <div class="text-secondary fs-sm">
+          <i class="fa fa-clock-o me-1" aria-hidden="true"></i
+          ><span>{{ dateFromTimestamp(props.post.published_at) }}</span>
+        </div>
+      </div>
+
+      <div class="post-author-label">
+        <img :src="authorAvatarURL" />
+        <div>{{ post.author.name }}</div>
+      </div>
     </div>
 
     <div v-html="props.post.excerpt_html" class="post-excerpt ql-output"></div>
@@ -37,10 +46,16 @@
 </template>
 
 <script setup>
-import { defineProps } from "vue";
+import { computed, defineProps } from "vue";
 import { dateFromTimestamp } from "@/service-functions";
 
 const props = defineProps({
   post: Object,
 });
+
+const authorAvatarURL = computed(() =>
+  props.post?.author?.avatar
+    ? props.post.author.avatar.full_url
+    : "/images/default_avatar.png"
+);
 </script>
