@@ -16,7 +16,7 @@
       <div class="feed-post-list">
         <TransitionGroup name="list-slide-left">
           <PostPreviewFeed
-            v-for="post in postList.data"
+            v-for="post in postList"
             :key="post.id"
             :post="post"
           />
@@ -24,10 +24,10 @@
       </div>
 
       <PaginationLine
-        :page="page"
-        :totalPages="totalPages"
+        :page="paginationPage"
+        :totalPages="paginationTotalPages"
         :links="paginationLinks"
-        :url="$route.path"
+        :route-path="paginationRoutePath"
         class="text-center mb-2"
       />
     </template>
@@ -43,11 +43,19 @@ import PostPreviewFeed from "./PostPreviewFeed.vue";
 import PaginationLine from "../inc/PaginationLine.vue";
 
 import { computed, onMounted, ref, watch } from "vue";
+import { usePagination } from "@/composables/pagination";
 import { useRequest } from "@/composables/request";
-import { useRoute } from "vue-router";
 import { apiPostListFeed } from "@/api";
 
 const postList = ref(null);
+
+const {
+  paginationPage,
+  paginationTotalPages,
+  paginationRoutePath,
+  paginationLinks,
+  setPaginationParams,
+} = usePagination();
 
 const {
   refErrorMessage,
@@ -59,33 +67,22 @@ const {
   reloadErrors,
 } = useRequest();
 
-const route = useRoute();
-
-const page = computed(() => (route.query.page ? +route.query.page : 1));
-const hasPosts = computed(() => postList.value?.data.length);
-const totalPages = computed(() => {
-  if (postList.value?.total && postList.value?.per_page)
-    return Math.ceil(postList.value.total / postList.value.per_page);
-  else return 1;
-});
-const paginationLinks = computed(() => ({
-  first: postList.value?.first_page_url ?? false,
-  prev: postList.value?.prev_page_url ?? false,
-  next: postList.value?.next_page_url ?? false,
-  last: postList.value?.last_page_url ?? false,
-}));
+const hasPosts = computed(() => postList.value?.length ?? false);
 
 function requestPosts() {
   if (requestProcessing.value) return;
   requestProcessing.value = true;
   reloadErrors();
 
-  apiPostListFeed(page.value)
+  apiPostListFeed(paginationPage.value)
     .then((posts) => {
-      postList.value = posts;
+      // console.log(posts);
+      setPaginationParams(posts);
+      postList.value = posts.data;
     })
     .catch((err) => {
       setError(err);
+      setPaginationParams({ pagination: null, links: null });
       postList.value = null;
     })
     .finally(() => {
@@ -97,7 +94,7 @@ onMounted(() => {
   requestPosts();
 });
 
-watch(page, () => {
+watch(paginationPage, () => {
   requestPosts();
 });
 </script>

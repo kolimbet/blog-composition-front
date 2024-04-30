@@ -65,7 +65,7 @@ const props = defineProps({
     default: 1,
   },
   links: Object,
-  url: { type: String, default: "" },
+  routePath: { type: String, default: "" },
 });
 
 const router = useRouter();
@@ -76,7 +76,7 @@ const hasNextLink = computed(() => props.page < props.totalPages);
 const hasLastLink = computed(() => props.page + 1 < props.totalPages);
 
 function generateLink(paginationLink) {
-  return props.url ? props.url + paginationLink : paginationLink;
+  return props.routePath ? props.routePath + paginationLink : paginationLink;
 }
 
 function goToFirst() {
