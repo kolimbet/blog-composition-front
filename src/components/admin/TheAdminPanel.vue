@@ -31,6 +31,10 @@ const navLinks = [
     name: "admin_posts",
   },
   {
+    title: "Tags",
+    name: "admin_tags",
+  },
+  {
     title: "Comments",
     name: "admin_comments",
   },

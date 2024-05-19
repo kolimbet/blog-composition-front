@@ -19,6 +19,7 @@ const sourceUrls = {
   postImages: "/api/images",
   posts: "/api/posts",
   adminPosts: "/api/admin/posts",
+  adminTags: "/api/admin/tags",
 };
 
 let token = localStorage.getItem("token") ?? null;
@@ -337,13 +338,13 @@ export async function apiPostListFeed(page = 1) {
 
 export async function apiPostListAdmin(page = 1) {
   return new Promise((resolve, reject) => {
-    // reject("apiPostListAccount test stopper");
+    // reject("apiPostListAdmin test stopper");
     const requestURL = new URL(sourceUrls.adminPosts, backendDomain);
     if (page > 1) requestURL.searchParams.append("page", page);
     axios
       .get(requestURL)
       .then(({ data }) => {
-        // console.log("apiPostListAccount completed successfully", data);
+        // console.log("apiPostListAdmin completed successfully", data);
         resolve(data);
       })
       .catch((err) => {
@@ -420,6 +421,85 @@ export async function apiPostDelete(postId) {
       .delete(sourceUrls.adminPosts + "/" + postId)
       .then(({ data }) => {
         // console.log("apiPostDelete completed successfully", data);
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(parseApiError(err));
+      });
+  });
+}
+
+// ------------------------ Tags ---------------------------------------
+export async function apiTagList() {
+  return new Promise((resolve, reject) => {
+    // reject("apiTagList test stopper");
+    axios
+      .get(sourceUrls.adminTags)
+      .then(({ data }) => {
+        // console.log("apiTagList completed successfully", data);
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(parseApiError(err));
+      });
+  });
+}
+
+export async function apiTagCheckName(tagName, tagId = 0) {
+  return new Promise((resolve, reject) => {
+    // reject("apiTagCheckName test stopper");
+    axios
+      .post(sourceUrls.adminTags + "/check-name", {
+        name: tagName,
+        tag_id: tagId,
+      })
+      .then(({ data }) => {
+        // console.log("apiTagCheckName completed successfully", data);
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(parseApiError(err));
+      });
+  });
+}
+
+export async function apiTagStore(tagName) {
+  return new Promise((resolve, reject) => {
+    // reject("apiTagStore test stopper");
+    axios
+      .post(sourceUrls.adminTags, { name: tagName })
+      .then(({ data }) => {
+        // console.log("apiTagStore completed successfully", data);
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(parseApiError(err));
+      });
+  });
+}
+
+export async function apiTagUpdate(tagId, tagName) {
+  return new Promise((resolve, reject) => {
+    // reject("apiTagUpdate test stopper");
+    axios
+      .post(sourceUrls.adminTags + "/" + tagId, { name: tagName })
+      .then(({ data }) => {
+        console.log("apiTagUpdate completed successfully", data);
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(parseApiError(err));
+      });
+  });
+}
+
+export async function apiTagDestroy(tagId) {
+  return new Promise((resolve, reject) => {
+    // reject("apiTagDestroy test stopper");
+    axios
+      .delete(sourceUrls.adminTags + "/" + tagId)
+      .then(({ data }) => {
+        // console.log("apiTagDestroy completed successfully", data);
         resolve(data);
       })
       .catch((err) => {

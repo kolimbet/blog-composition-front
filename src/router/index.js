@@ -106,6 +106,11 @@ const routes = [
         ],
       },
       {
+        path: "tags",
+        name: "admin_tags",
+        component: () => import("@/components/tag/TheTagListAdmin.vue"),
+      },
+      {
         path: "comments",
         name: "admin_comments",
         component: () => import("@/components/admin/TheAdminComments.vue"),

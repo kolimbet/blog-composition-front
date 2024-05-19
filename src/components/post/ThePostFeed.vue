@@ -43,7 +43,7 @@ import PostPreviewFeed from "./PostPreviewFeed.vue";
 import PaginationLine from "../inc/PaginationLine.vue";
 
 import { computed, onMounted, ref, watch } from "vue";
-import { usePagination } from "@/composables/pagination";
+import { usePaginationBackend } from "@/composables/paginationBackend";
 import { useRequest } from "@/composables/request";
 import { apiPostListFeed } from "@/api";
 
@@ -55,7 +55,7 @@ const {
   paginationRoutePath,
   paginationLinks,
   setPaginationParams,
-} = usePagination();
+} = usePaginationBackend();
 
 const {
   refErrorMessage,

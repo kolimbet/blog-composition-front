@@ -1,7 +1,7 @@
 import { computed, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-export function usePagination() {
+export function usePaginationBackend() {
   const paginationParams = ref(null);
   const paginationRawLinks = ref(null);
 
