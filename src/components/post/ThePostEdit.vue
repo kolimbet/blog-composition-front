@@ -127,6 +127,11 @@
           </div>
         </div>
 
+        <TheTagListOfPost
+          v-model:list-of-attached-tags="tagsList"
+          class="mb-4"
+        />
+
         <ThePostImageList
           :post-id="props.postId"
           :image-folder="form.image_path"
@@ -165,6 +170,7 @@ import BaseRequestButton from "../base/BaseRequestButton.vue";
 import EditorPost from "../quill/EditorPost.vue";
 import BaseIconUpdate from "../base/BaseIconUpdate.vue";
 import ThePostImageList from "../image/ThePostImageList.vue";
+import TheTagListOfPost from "../tag/TheTagListOfPost.vue";
 
 import { computed, defineProps, onMounted, ref } from "vue";
 import { Delta } from "quill/core";
@@ -195,6 +201,7 @@ const form = ref({
 });
 
 const imageList = ref([]);
+const tagsList = ref([]);
 
 const postData = ref(null);
 
@@ -271,7 +278,7 @@ function generateSlug() {
   this.form.slug = slug(this.form.title);
 }
 
-function loadPostData({ post, images }) {
+function loadPostData({ post, images, tags }) {
   post.excerpt_raw = new Delta(JSON.parse(post.excerpt_raw));
   post.content_raw = new Delta(JSON.parse(post.content_raw));
   post.is_published = Boolean(post.is_published);
@@ -282,6 +289,7 @@ function loadPostData({ post, images }) {
   }
 
   imageList.value = images ?? [];
+  tagsList.value = tags ?? [];
 }
 
 function requestPostData(successFunc = null) {
@@ -320,6 +328,7 @@ function updatePost() {
       const data = _.cloneDeep(form.value);
       data.excerpt_raw = JSON.stringify(data.excerpt_raw);
       data.content_raw = JSON.stringify(data.content_raw);
+      data["tags"] = JSON.stringify(tagsList.value);
 
       apiPostUpdate(props.postId, data)
         .then((postNewData) => {

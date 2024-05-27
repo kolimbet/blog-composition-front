@@ -137,6 +137,8 @@
         >
       </div>
 
+      <TheTagListOfPost v-model:list-of-attached-tags="tagsList" class="mb-4" />
+
       <ThePostImageList
         :image-folder="form.image_path"
         @update:image-folder="updateImageFolder($event)"
@@ -163,6 +165,7 @@ import ErrorList from "../inc/ErrorList.vue";
 import BaseRequestButton from "../base/BaseRequestButton.vue";
 import EditorPost from "../quill/EditorPost.vue";
 import ThePostImageList from "../image/ThePostImageList.vue";
+import TheTagListOfPost from "../tag/TheTagListOfPost.vue";
 
 import { computed, onBeforeUnmount, ref } from "vue";
 import { useRequest } from "@/composables/request";
@@ -186,6 +189,7 @@ const form = ref({
 });
 
 const imageList = ref([]);
+const tagsList = ref([]);
 
 const postStoreIsCompleted = ref(false);
 const newPostId = ref(false);
@@ -251,6 +255,7 @@ function storePost() {
       data.excerpt_raw = JSON.stringify(data.excerpt_raw);
       data.content_raw = JSON.stringify(data.content_raw);
       data["image_counter"] = imageList.value.length;
+      data["tags"] = JSON.stringify(tagsList.value);
 
       apiPostStore(data)
         .then((postId) => {

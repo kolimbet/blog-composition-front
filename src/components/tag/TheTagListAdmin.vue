@@ -67,7 +67,7 @@
     <TheTagCreate
       :is-open="addFormIsOpen"
       @close="closeAddForm()"
-      @add="addTag($event)"
+      @add="tagAdd($event)"
     />
 
     <!-- Request Error -->
@@ -80,20 +80,20 @@
       />
     </div>
 
-    <div v-if="!isInit" class="mb-2 text-center fs-5 text-secondary">
+    <div v-if="!tagsIsLoaded" class="mb-2 text-center fs-5 text-secondary">
       Tags are not loaded. Wait...
     </div>
-    <div v-else-if="filteredTags?.length" class="mt-0">
+    <div v-else-if="tagsFiltered?.length" class="mt-0">
       <div
         class="mb-0-75rem row row-cols-1 row-cols-lg-2 gx-0-75rem gy-0-75rem"
       >
         <TransitionGroup name="list-folding-y-100">
           <TagItemAdmin
-            v-for="tag in paginatedTags"
+            v-for="tag in tagsPaginated"
             :key="tag.id"
             :tag="tag"
-            @update="updateTag($event)"
-            @delete="deleteTag(tag.id)"
+            @update="tagUpdate($event)"
+            @delete="tagDelete(tag.id)"
           />
         </TransitionGroup>
 
@@ -106,7 +106,7 @@
         />
       </div>
     </div>
-    <div v-else-if="hasTags" class="mb-2 text-center fs-5 text-secondary">
+    <div v-else-if="tagsNotEmpty" class="mb-2 text-center fs-5 text-secondary">
       None of the tags matches the installed filter
     </div>
     <div v-else class="mb-2 text-center fs-5 text-secondary">No tags</div>
@@ -122,12 +122,20 @@ import TagItemAdmin from "./TagItemAdmin.vue";
 import PaginationLine from "../inc/PaginationLine.vue";
 
 import { computed, onMounted, ref, watch } from "vue";
+import {
+  tagsIsLoaded,
+  tagsNotEmpty,
+  tagsSortedAlphabetically,
+  tagsLoading,
+  tagsLoadError,
+  tagAdd,
+  tagUpdate,
+  tagDelete,
+} from "@/composables/storeTags.js";
 import { useRoute, useRouter } from "vue-router";
 import { useRequest } from "@/composables/request";
 import { apiTagList } from "@/api";
 
-const tagList = ref([]);
-const isInit = ref(false);
 const filter = ref("");
 const limitOnPage = ref("20");
 const limitOnPageValues = [10, 20, 30, 40];
@@ -148,42 +156,28 @@ const {
 
 const page = computed(() => (route.query.page ? +route.query.page : 1));
 
-const hasTags = computed(() => tagList.value?.length ?? false);
-
-const sortedTags = computed(() => {
-  if (hasTags.value) {
-    return tagList.value
-      .slice()
-      .sort((tagA, tagB) =>
-        tagA.name_low_case.localeCompare(tagB.name_low_case)
-      );
-  } else {
-    return tagList.value;
-  }
-});
-
-const filteredTags = computed(() => {
-  if (filter.value) {
+const tagsFiltered = computed(() => {
+  if (tagsNotEmpty.value) {
     let filterLowCase = filter.value.toLowerCase();
-    return sortedTags.value
+    return tagsSortedAlphabetically.value
       .slice()
       .filter((tag) => tag.name_low_case.includes(filterLowCase));
   } else {
-    return sortedTags.value;
+    return tagsSortedAlphabetically.value;
   }
 });
 
 const totalPages = computed(() =>
-  filteredTags.value?.length
-    ? Math.ceil(filteredTags.value.length / limitOnPage.value)
+  tagsFiltered.value?.length
+    ? Math.ceil(tagsFiltered.value.length / limitOnPage.value)
     : 1
 );
 
-const paginatedTags = computed(() => {
-  if (filteredTags.value?.length && page.value <= totalPages.value) {
+const tagsPaginated = computed(() => {
+  if (tagsFiltered.value?.length && page.value <= totalPages.value) {
     const start = (page.value - 1) * limitOnPage.value;
     const end = page.value * limitOnPage.value;
-    return filteredTags.value.slice(start, end);
+    return tagsFiltered.value.slice(start, end);
   } else {
     return [];
   }
@@ -203,25 +197,6 @@ function closeAddForm() {
   addFormIsOpen.value = false;
 }
 
-function addTag(newTag) {
-  tagList.value.push(newTag);
-}
-
-function updateTag(changedTag) {
-  tagList.value.splice(
-    tagList.value.findIndex((tag) => tag.id === changedTag.id),
-    1,
-    changedTag
-  );
-}
-
-function deleteTag(tagId) {
-  tagList.value.splice(
-    tagList.value.findIndex((tag) => tag.id === tagId),
-    1
-  );
-}
-
 function requestTags() {
   if (requestProcessing.value) return;
   requestProcessing.value = true;
@@ -229,14 +204,12 @@ function requestTags() {
 
   apiTagList()
     .then((tags) => {
-      console.log(tags);
-      isInit.value = true;
-      tagList.value = tags;
+      // console.log(tags);
+      tagsLoading(tags);
     })
     .catch((err) => {
       setError(err);
-      isInit.value = false;
-      tagList.value = [];
+      tagsLoadError();
     })
     .finally(() => {
       requestProcessing.value = false;
@@ -259,7 +232,7 @@ watch(limitOnPage, (newValue) => {
 watch(
   () => route.query.page,
   (newPageValue) => {
-    if (isInit.value && newPageValue > totalPages.value) {
+    if (tagsIsLoaded.value && newPageValue > totalPages.value) {
       router.push(route.path + "?page=" + totalPages.value);
     } else if (newPageValue < 1) {
       router.push(route.path);
@@ -268,7 +241,7 @@ watch(
 );
 
 watch(totalPages, (newValue) => {
-  if (isInit.value && page.value > newValue)
+  if (tagsIsLoaded.value && page.value > newValue)
     router.push(route.path + "?page=" + newValue);
 });
 
