@@ -17,6 +17,16 @@ const routes = [
     },
   },
   {
+    path: "/tag/:tagSlug",
+    name: "posts_by_tag",
+    component: () => import("@/components/post/ThePostListByTag.vue"),
+    meta: {
+      requiresAuthorization: false,
+      forAdmin: false,
+    },
+    props: true,
+  },
+  {
     path: "/:postSlug",
     name: "post",
     component: () => import("@/components/post/ThePostItem.vue"),

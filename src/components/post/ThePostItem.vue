@@ -35,6 +35,20 @@
       <div v-html="post.excerpt_html" class="post-excerpt ql-output"></div>
 
       <div v-html="post.content_html" class="post-content ql-output"></div>
+
+      <div
+        v-if="hasTags"
+        class="d-flex flex-wrap gap-0-75rem align-items-center"
+      >
+        <span class="text-secondary">Tags:</span>
+        <RouterLink
+          v-for="tag in tagsList"
+          :key="tag.id"
+          :to="{ name: 'posts_by_tag', params: { tagSlug: tag.slug } }"
+          class="text-decoration-none"
+          >#{{ tag.name }}</RouterLink
+        >
+      </div>
     </div>
   </div>
 </template>
@@ -71,6 +85,8 @@ const authorAvatarURL = computed(() =>
     ? post.value.author.avatar.full_url
     : "/images/default_avatar.png"
 );
+const hasTags = computed(() => post.value?.tags?.length);
+const tagsList = computed(() => (hasTags.value ? post.value.tags : []));
 
 function requestPost() {
   if (requestProcessing.value) return;

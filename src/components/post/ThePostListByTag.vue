@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-50vh">
-    <h2 class="text-center mb-4">Feed</h2>
+    <h2 class="text-center mb-4">Posts by tag #{{ tagName }}</h2>
 
     <!-- Request Error -->
     <div ref="refErrorMessage">
@@ -42,11 +42,16 @@ import ErrorSingle from "../inc/ErrorSingle.vue";
 import PostPreviewFeed from "./PostPreviewFeed.vue";
 import PaginationLine from "../inc/PaginationLine.vue";
 
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, defineProps, onMounted, ref, watch } from "vue";
 import { usePaginationBackend } from "@/composables/paginationBackend";
 import { useRequest } from "@/composables/request";
-import { apiPostListFeed } from "@/api";
+import { apiPostListByTag } from "@/api.js";
 
+const props = defineProps({
+  tagSlug: String,
+});
+
+const tagItem = ref(null);
 const postList = ref(null);
 
 const {
@@ -68,20 +73,23 @@ const {
 } = useRequest();
 
 const hasPosts = computed(() => postList.value?.length ?? false);
+const tagName = computed(() => (tagItem.value ? tagItem.value.name : ""));
 
 function requestPosts() {
   if (requestProcessing.value) return;
   requestProcessing.value = true;
   reloadErrors();
 
-  apiPostListFeed(paginationPage.value)
-    .then(({ posts }) => {
-      // console.log(posts);
+  apiPostListByTag(props.tagSlug, paginationPage.value)
+    .then(({ tag, posts }) => {
+      // console.log(tag, posts);
+      tagItem.value = tag;
       setPaginationParams(posts);
       postList.value = posts.data;
     })
     .catch((err) => {
       setError(err);
+      tagItem.value = null;
       setPaginationParams({ pagination: null, links: null });
       postList.value = null;
     })
@@ -90,11 +98,18 @@ function requestPosts() {
     });
 }
 
-onMounted(() => {
+watch(
+  () => props.tagSlug,
+  () => {
+    requestPosts();
+  }
+);
+
+watch(paginationPage, () => {
   requestPosts();
 });
 
-watch(paginationPage, () => {
+onMounted(() => {
   requestPosts();
 });
 </script>

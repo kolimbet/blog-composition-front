@@ -278,7 +278,7 @@ function generateSlug() {
   this.form.slug = slug(this.form.title);
 }
 
-function loadPostData({ post, images, tags }) {
+function loadPostData({ post, images }) {
   post.excerpt_raw = new Delta(JSON.parse(post.excerpt_raw));
   post.content_raw = new Delta(JSON.parse(post.content_raw));
   post.is_published = Boolean(post.is_published);
@@ -287,9 +287,9 @@ function loadPostData({ post, images, tags }) {
   for (let key in form.value) {
     form.value[key] = post[key];
   }
+  tagsList.value = post["tags"] ?? [];
 
   imageList.value = images ?? [];
-  tagsList.value = tags ?? [];
 }
 
 function requestPostData(successFunc = null) {

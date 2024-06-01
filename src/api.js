@@ -336,6 +336,26 @@ export async function apiPostListFeed(page = 1) {
   });
 }
 
+export async function apiPostListByTag(tagSlug, page = 1) {
+  return new Promise((resolve, reject) => {
+    // reject("apiPostListAdmin test stopper");
+    const requestURL = new URL(
+      sourceUrls.posts + `/by-tag/${tagSlug}`,
+      backendDomain
+    );
+    if (page > 1) requestURL.searchParams.append("page", page);
+    axios
+      .get(requestURL)
+      .then(({ data }) => {
+        // console.log("apiPostListByTag completed successfully", data);
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(parseApiError(err));
+      });
+  });
+}
+
 export async function apiPostListAdmin(page = 1) {
   return new Promise((resolve, reject) => {
     // reject("apiPostListAdmin test stopper");
