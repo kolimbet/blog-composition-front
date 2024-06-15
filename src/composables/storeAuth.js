@@ -19,6 +19,7 @@ export const getAvatarUrl = computed(() =>
   user.value?.avatar ? user.value.avatar.full_url : "/images/default_avatar.png"
 );
 export const getAvatarId = computed(() => user.value.avatar_id);
+export const getUserId = computed(() => user.value?.id ?? 0);
 export const getUserName = computed(() => user.value?.name ?? "...");
 export const getIsAdmin = computed(() => +user.value?.is_admin ?? 0);
 

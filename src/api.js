@@ -449,6 +449,36 @@ export async function apiPostDelete(postId) {
   });
 }
 
+// ---------------------- PostLikes ------------------------------------
+export async function apiPostLikeAdd(postId) {
+  return new Promise((resolve, reject) => {
+    // reject("apiPostLikeAdd test stopper");
+    axios
+      .get(sourceUrls.posts + "/" + postId + "/like-add")
+      .then(({ data }) => {
+        // console.log("apiPostLikeAdd completed successfully", data);
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(parseApiError(err));
+      });
+  });
+}
+export async function apiPostLikeDestroy(postId) {
+  return new Promise((resolve, reject) => {
+    // reject("apiPostLikeDestroy test stopper");
+    axios
+      .get(sourceUrls.posts + "/" + postId + "/like-destroy")
+      .then(({ data }) => {
+        // console.log("apiPostLikeDestroy completed successfully", data);
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(parseApiError(err));
+      });
+  });
+}
+
 // ------------------------ Tags ---------------------------------------
 export async function apiTagList() {
   return new Promise((resolve, reject) => {

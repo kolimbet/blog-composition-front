@@ -38,7 +38,7 @@
 
       <div
         v-if="hasTags"
-        class="d-flex flex-wrap gap-0-75rem align-items-center"
+        class="mb-3 d-flex flex-wrap gap-0-75rem align-items-center"
       >
         <span class="text-secondary">Tags:</span>
         <RouterLink
@@ -50,6 +50,30 @@
         >
       </div>
     </div>
+
+    <div
+      class="d-flex justify-content-between align-items-center px-0-75rem py-2 bg-blue text-white rounded-2"
+    >
+      <div
+        @click="toggleLike()"
+        class="d-flex align-items-center cursor-pointer"
+      >
+        <i
+          class="fa fa-heart-o fs-5"
+          aria-hidden="true"
+          :class="[likeIconClasses]"
+        ></i
+        ><span class="ms-1">{{ likesCounter }}</span>
+      </div>
+
+      <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center cursor-pointer">
+          <i class="fa fa-comment-o fs-5" aria-hidden="true"></i
+          ><span class="ms-1">?</span>
+        </div>
+        <a href="#" class="ms-3 link-white text-decoration-none">report</a>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -58,7 +82,8 @@ import ErrorSingle from "../inc/ErrorSingle.vue";
 
 import { computed, defineProps, onMounted, ref } from "vue";
 import { useRequest } from "@/composables/request";
-import { apiPostItemFeed } from "@/api";
+import { getAuthorized, getUserId } from "@/composables/storeAuth";
+import { apiPostItemFeed, apiPostLikeAdd, apiPostLikeDestroy } from "@/api";
 import { dateFromTimestamp } from "@/service-functions";
 
 const props = defineProps({
@@ -87,6 +112,54 @@ const authorAvatarURL = computed(() =>
 );
 const hasTags = computed(() => post.value?.tags?.length);
 const tagsList = computed(() => (hasTags.value ? post.value.tags : []));
+
+const hasLikes = computed(() =>
+  post.value?.likes && post.value.likes?.length ? true : false
+);
+const likesCounter = computed(() =>
+  hasLikes.value ? post.value.likes.length : 0
+);
+const isLikedByUser = computed(() =>
+  hasLikes.value && getAuthorized.value
+    ? post.value.likes.some((likeItem) => likeItem.user_id == getUserId.value)
+    : false
+);
+const likeIconClasses = computed(() =>
+  isLikedByUser.value ? "text-black fw-bold" : ""
+);
+
+function toggleLike() {
+  if (!getAuthorized.value) return;
+  requestProcessing.value = true;
+  reloadErrors();
+
+  if (isLikedByUser.value) {
+    apiPostLikeDestroy(post.value.id)
+      .then((deletedLikeId) => {
+        post.value.likes.splice(
+          post.value.likes.findIndex((like) => like.id == deletedLikeId),
+          1
+        );
+      })
+      .catch((err) => {
+        setError(err);
+      })
+      .finally(() => {
+        requestProcessing.value = false;
+      });
+  } else {
+    apiPostLikeAdd(post.value.id)
+      .then((newLike) => {
+        post.value.likes.push(newLike);
+      })
+      .catch((err) => {
+        setError(err);
+      })
+      .finally(() => {
+        requestProcessing.value = false;
+      });
+  }
+}
 
 function requestPost() {
   if (requestProcessing.value) return;

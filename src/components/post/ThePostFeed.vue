@@ -19,6 +19,8 @@
             v-for="post in postList"
             :key="post.id"
             :post="post"
+            @like-add="postLikeAdd(post.id, $event)"
+            @like-destroy="postLikeDestroy(post.id, $event)"
           />
         </TransitionGroup>
       </div>
@@ -68,6 +70,35 @@ const {
 } = useRequest();
 
 const hasPosts = computed(() => postList.value?.length ?? false);
+
+function postLikeAdd(postId, newLike) {
+  reloadErrors();
+  const postIndex = postList.value.findIndex((post) => post.id == postId);
+  if (postIndex == -1) {
+    setError(
+      `Error adding a like: post #${postIndex} was not found in the postList`
+    );
+  }
+
+  postList.value[postIndex].likes.push(newLike);
+}
+
+function postLikeDestroy(postId, deletedLikeId) {
+  reloadErrors();
+  const postIndex = postList.value.findIndex((post) => post.id == postId);
+  if (postIndex == -1) {
+    setError(
+      `Error destroying a like: post #${postIndex} was not found in the postList`
+    );
+  }
+
+  postList.value[postIndex].likes.splice(
+    postList.value[postIndex].likes.findIndex(
+      (like) => like.id == deletedLikeId
+    ),
+    1
+  );
+}
 
 function requestPosts() {
   if (requestProcessing.value) return;
