@@ -5,7 +5,7 @@
       class="mb-2 d-flex justify-content-between align-items-center gap-3"
     >
       <div>
-        <h2 class="mb-2">{{ post?.title }}</h2>
+        <h2 class="mb-2">{{ post.title }} #{{ post.id }}</h2>
         <div class="fs-sm text-secondary">
           <i class="fa fa-clock-o me-1" aria-hidden="true"></i
           ><span>{{ publishedAt }}</span>
@@ -74,11 +74,14 @@
         <a href="#" class="ms-3 link-white text-decoration-none">report</a>
       </div>
     </div>
+
+    <TheCommentsListOfPost :post-id="postId" />
   </div>
 </template>
 
 <script setup>
 import ErrorSingle from "../inc/ErrorSingle.vue";
+import TheCommentsListOfPost from "../comment/TheCommentsListOfPost.vue";
 
 import { computed, defineProps, onMounted, ref } from "vue";
 import { useRequest } from "@/composables/request";
@@ -102,6 +105,7 @@ const {
   reloadErrors,
 } = useRequest();
 
+const postId = computed(() => (post.value ? post.value.id : null));
 const publishedAt = computed(() =>
   post.value ? dateFromTimestamp(post.value.published_at) : ""
 );
@@ -134,7 +138,7 @@ function toggleLike() {
   reloadErrors();
 
   if (isLikedByUser.value) {
-    apiPostLikeDestroy(post.value.id)
+    apiPostLikeDestroy(postId.value)
       .then((deletedLikeId) => {
         post.value.likes.splice(
           post.value.likes.findIndex((like) => like.id == deletedLikeId),
@@ -148,7 +152,7 @@ function toggleLike() {
         requestProcessing.value = false;
       });
   } else {
-    apiPostLikeAdd(post.value.id)
+    apiPostLikeAdd(postId.value)
       .then((newLike) => {
         post.value.likes.push(newLike);
       })

@@ -8,7 +8,7 @@
               name: 'post',
               params: { postSlug: props.post.slug || props.post.id },
             }"
-            >{{ props.post.title }}</RouterLink
+            >{{ props.post.title }} #{{ props.post.id }}</RouterLink
           >
         </h3>
 

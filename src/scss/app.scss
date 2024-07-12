@@ -159,6 +159,21 @@
   box-shadow: 0px 2px 6px 1px $gray-200;
 }
 .comment {
+  position: relative;
+  z-index: 1;
+
+  & .label-id {
+    position: absolute;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    color: $secondary;
+  }
+  & .label-id {
+    font-size: $xs-font-size;
+    top: 0;
+    right: 0;
+  }
+
   & p {
     margin-bottom: 0.75rem;
   }

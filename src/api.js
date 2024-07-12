@@ -18,6 +18,7 @@ const sourceUrls = {
   avatars: "/api/avatars",
   postImages: "/api/images",
   posts: "/api/posts",
+  comments: "/api/comments",
   adminPosts: "/api/admin/posts",
   adminTags: "/api/admin/tags",
 };
@@ -550,6 +551,57 @@ export async function apiTagDestroy(tagId) {
       .delete(sourceUrls.adminTags + "/" + tagId)
       .then(({ data }) => {
         // console.log("apiTagDestroy completed successfully", data);
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(parseApiError(err));
+      });
+  });
+}
+
+// ------------------------ Comments -------------------------------------
+export async function apiPostCommentsList(postId, page = 1) {
+  return new Promise((resolve, reject) => {
+    // reject("apiPostCommentsList test stopper");
+    const requestURL = new URL(
+      sourceUrls.posts + `/${postId}/comments`,
+      backendDomain
+    );
+    if (page > 1) requestURL.searchParams.append("page", page);
+    axios
+      .get(requestURL)
+      .then(({ data }) => {
+        // console.log("apiPostCommentsList completed successfully", data);
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(parseApiError(err));
+      });
+  });
+}
+
+export async function apiPostCommentAdd(postId, comment) {
+  return new Promise((resolve, reject) => {
+    // reject("apiPostCommentAdd test stopper");
+    axios
+      .post(sourceUrls.posts + `/${postId}/comment-add`, comment)
+      .then(({ data }) => {
+        // console.log("apiPostCommentAdd completed successfully", data);
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(parseApiError(err));
+      });
+  });
+}
+
+export async function apiCommentDestroy(commentId) {
+  return new Promise((resolve, reject) => {
+    // reject("apiCommentDestroy test stopper");
+    axios
+      .delete(sourceUrls.comments + "/" + commentId)
+      .then(({ data }) => {
+        // console.log("apiCommentDestroy completed successfully", data);
         resolve(data);
       })
       .catch((err) => {
