@@ -69,7 +69,7 @@
       <div class="d-flex align-items-center">
         <div class="d-flex align-items-center cursor-pointer">
           <i class="fa fa-comment-o fs-5" aria-hidden="true"></i
-          ><span class="ms-1">?</span>
+          ><span class="ms-1">{{ commentsCounter }}</span>
         </div>
         <a href="#" class="ms-3 link-white text-decoration-none">report</a>
       </div>
@@ -131,6 +131,8 @@ const isLikedByUser = computed(() =>
 const likeIconClasses = computed(() =>
   isLikedByUser.value ? "text-black fw-bold" : ""
 );
+
+const commentsCounter = computed(() => post.value?.comments_count ?? 0);
 
 function toggleLike() {
   if (!getAuthorized.value) return;
