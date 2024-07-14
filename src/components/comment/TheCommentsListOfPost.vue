@@ -17,6 +17,7 @@
             v-for="comment in commentsList"
             :key="comment.id"
             :comment="comment"
+            @delete="deleteComment(comment.id)"
           />
         </TransitionGroup>
       </div>
@@ -46,7 +47,7 @@ import CommentItem from "./CommentItem.vue";
 import { usePaginationBackend } from "@/composables/paginationBackend";
 import { useRequest } from "@/composables/request";
 import { computed, defineProps, onMounted, ref, watch } from "vue";
-import { apiPostCommentsList } from "@/api";
+import { apiCommentDestroy, apiPostCommentsList } from "@/api";
 
 const props = defineProps({
   postId: [null, String, Number],
@@ -82,8 +83,12 @@ function requestComments() {
   reloadErrors();
 
   apiPostCommentsList(props.postId, paginationPage.value)
+    .finally(() => {
+      requestProcessing.value = false;
+      initiated.value = true;
+    })
     .then((comments) => {
-      console.log(comments);
+      // console.log(comments);
       setPaginationParams(comments);
       commentsList.value = comments.data;
     })
@@ -91,16 +96,8 @@ function requestComments() {
       setError(err);
       setPaginationParams({ pagination: null, links: null });
       commentsList.value = null;
-    })
-    .finally(() => {
-      requestProcessing.value = false;
-      initiated.value = true;
     });
 }
-
-onMounted(() => {
-  requestComments();
-});
 
 watch(
   () => props.postId,
@@ -108,8 +105,36 @@ watch(
     requestComments();
   }
 );
-
 watch(paginationPage, () => {
+  requestComments();
+});
+
+function deleteComment(commentId) {
+  if (requestProcessing.value) return;
+  requestProcessing.value = true;
+  reloadErrors();
+
+  apiCommentDestroy(commentId)
+    .finally(() => {
+      requestProcessing.value = false;
+    })
+    .then((res) => {
+      console.log(res);
+      commentsList.value.splice(
+        commentsList.value.findIndex((el) => el.id === commentId),
+        1
+      );
+
+      // reload current comment page
+      requestComments();
+      // nextTick(() => requestComments());
+    })
+    .catch((err) => {
+      setError(err);
+    });
+}
+
+onMounted(() => {
   requestComments();
 });
 </script>

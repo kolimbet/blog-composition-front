@@ -156,7 +156,15 @@
 .add-comment {
   padding: 0.7rem 1.5rem 1rem;
   margin-bottom: 1rem;
+}
+.comment-shadow {
   box-shadow: 0px 2px 6px 1px $gray-200;
+}
+.comment-own-shadow {
+  box-shadow: 0px 2px 6px 1px $blue-400;
+}
+.comment-new-shadow {
+  box-shadow: 0px 2px 6px 1px $gray-400;
 }
 .comment {
   position: relative;

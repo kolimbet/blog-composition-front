@@ -16167,7 +16167,18 @@ textarea.form-control-lg {
 .add-comment {
   padding: 0.7rem 1.5rem 1rem;
   margin-bottom: 1rem;
+}
+
+.comment-shadow {
   box-shadow: 0px 2px 6px 1px #e9ecef;
+}
+
+.comment-own-shadow {
+  box-shadow: 0px 2px 6px 1px #3d8bfd;
+}
+
+.comment-new-shadow {
+  box-shadow: 0px 2px 6px 1px #ced4da;
 }
 
 .comment {
