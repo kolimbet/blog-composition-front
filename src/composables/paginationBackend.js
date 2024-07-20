@@ -53,11 +53,26 @@ export function usePaginationBackend() {
       : paginationLink;
   }
 
+  function goToLastPage() {
+    console.log("goToLastPage()", paginationLinks.value.last);
+    if (paginationLinks.value.last) {
+      router.push(generateLink(paginationLinks.value.last));
+    }
+  }
+
+  function goToNextPage() {
+    if (paginationLinks.value.next) {
+      router.push(generateLink(paginationLinks.value.next));
+    }
+  }
+
   return {
     paginationPage,
     paginationTotalPages,
     paginationRoutePath,
     paginationLinks,
     setPaginationParams,
+    goToLastPage,
+    goToNextPage,
   };
 }

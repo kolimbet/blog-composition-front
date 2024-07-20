@@ -1,5 +1,5 @@
 <template>
-  <div class="comment" :class="[commentBg, commentShadow]">
+  <div :id="blockId" class="comment" :class="[commentBg, commentShadow]">
     <div class="label-id">#{{ props.comment.id }}</div>
 
     <aside class="d-flex align-items-center mb-2">
@@ -55,10 +55,15 @@ const props = defineProps({
 
 const emit = defineEmits(["delete"]);
 
+const blockId = computed(() => "comment-" + props.comment.id);
+
 const authorAvatarURL = computed(() =>
   props.comment?.author?.avatar
     ? props.comment.author.avatar.full_url
     : "/images/default_avatar.png"
+);
+const isOwn = computed(() =>
+  getUserId.value && getUserId.value === props.comment.author.id ? true : false
 );
 
 const publishedAt = computed(() =>
@@ -69,10 +74,6 @@ const publishedAt = computed(() =>
 
 const commentBg = computed(() =>
   props.comment.is_published ? "" : "bg-light"
-);
-
-const isOwn = computed(() =>
-  getUserId.value && getUserId.value === props.comment.author.id ? true : false
 );
 const commentShadow = computed(() =>
   isOwn.value ? "comment-own-shadow" : "comment-shadow"

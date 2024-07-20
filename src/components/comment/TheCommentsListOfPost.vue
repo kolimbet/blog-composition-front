@@ -1,5 +1,10 @@
 <template>
   <div class="mt-3">
+    <TheCommentCreate
+      :post-id="props.postId"
+      @add="addCommentHandler($event)"
+    />
+
     <!-- Request Error -->
     <div ref="refErrorMessage">
       <ErrorSingle
@@ -10,7 +15,7 @@
       />
     </div>
 
-    <template v-if="hasPosts">
+    <template v-if="hasComments">
       <div class="mb-3">
         <TransitionGroup name="list-slide-left">
           <CommentItem
@@ -43,6 +48,7 @@
 import ErrorSingle from "../inc/ErrorSingle.vue";
 import PaginationLine from "../inc/PaginationLine.vue";
 import CommentItem from "./CommentItem.vue";
+import TheCommentCreate from "./TheCommentCreate.vue";
 
 import { usePaginationBackend } from "@/composables/paginationBackend";
 import { useRequest } from "@/composables/request";
@@ -56,12 +62,19 @@ const props = defineProps({
 const commentsList = ref(null);
 const initiated = ref(false);
 
+const updateDataTrigger = ref(false);
+const goToComment = ref(null);
+
+const animationDelay = 1000;
+
 const {
   paginationPage,
   paginationTotalPages,
   paginationRoutePath,
   paginationLinks,
   setPaginationParams,
+  goToLastPage,
+  goToNextPage,
 } = usePaginationBackend();
 
 const {
@@ -74,7 +87,7 @@ const {
   reloadErrors,
 } = useRequest();
 
-const hasPosts = computed(() => commentsList.value?.length ?? false);
+const hasComments = computed(() => commentsList.value?.length ?? false);
 
 function requestComments() {
   if (!props.postId) return;
@@ -91,6 +104,7 @@ function requestComments() {
       // console.log(comments);
       setPaginationParams(comments);
       commentsList.value = comments.data;
+      updateDataTrigger.value = !updateDataTrigger.value;
     })
     .catch((err) => {
       setError(err);
@@ -125,14 +139,48 @@ function deleteComment(commentId) {
         1
       );
 
-      // reload current comment page
+      // reload current comments page
       requestComments();
-      // nextTick(() => requestComments());
     })
     .catch((err) => {
       setError(err);
     });
 }
+
+function addCommentHandler(newCommentId) {
+  goToComment.value = newCommentId;
+  if (paginationPage.value < paginationTotalPages.value) {
+    goToLastPage();
+  } else {
+    requestComments();
+  }
+}
+
+function findCommentById(commentId) {
+  return commentsList.value.some((el) => el.id == commentId);
+}
+
+watch(updateDataTrigger, () => {
+  if (goToComment.value && hasComments.value) {
+    if (findCommentById(goToComment.value)) {
+      const commentAnchor = "comment-" + goToComment.value;
+      setTimeout(() => {
+        const commentElt = document.getElementById(commentAnchor);
+        if (commentElt) commentElt.scrollIntoView();
+      }, animationDelay);
+      goToComment.value = null;
+    } else {
+      if (paginationPage.value < paginationTotalPages.value) {
+        goToNextPage();
+      } else {
+        setError(
+          "goToComment error: couldn't find a comment #" + goToComment.value
+        );
+        goToComment.value = null;
+      }
+    }
+  }
+});
 
 onMounted(() => {
   requestComments();
