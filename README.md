@@ -24,16 +24,6 @@ Create a file /src/config.js . Where to specify your backend domain in the backe
 export const backendDomain = "http://blog-spa-tst.back";
 ```
 
-Prescribe autocorrect paths for your IDE. I use VS Code and add a local
-settings file /.vscode/settings.json the following instructions for the PathAutocomplete plugin:
-
-```
-// Path Autocomplite
-"path-autocomplete.pathMappings": {
-  "@": ["${workspace}/src"]
-}
-```
-
 I also use Live Sass Compiler. CSS files compiled by this plugin are imported into the project. The sources are in the /src/scss folder.
 
 Compile the project:

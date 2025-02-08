@@ -145,7 +145,6 @@ function login() {
     } else {
       actionLogin(form.value)
         .then((userData) => {
-          form.value.email = form.value.password = "";
           console.log(`Вы успешно вошли как ${userData.name}`);
           router.push({ name: "home" });
         })
