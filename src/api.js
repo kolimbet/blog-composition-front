@@ -8,13 +8,15 @@ axios.defaults.headers.common["Accept"] = "application/json";
 const sourceUrls = {
   login: "/api/login",
   logout: "/api/logout",
-  user: "/api/user",
   userRegister: "/api/register",
   userNameIsFree: "/api/name-is-free",
   userEmailIsFree: "/api/email-is-free",
+  userCheckAuth: "/api/check-auth",
+  userAboutSelf: "/api/user/self",
   userPasswordCheck: "/api/user/check-password",
   userPasswordUpdate: "/api/user/update-password",
   userAvatar: "/api/user/avatar",
+  users: "/api/users",
   avatars: "/api/avatars",
   postImages: "/api/images",
   posts: "/api/posts",
@@ -78,7 +80,7 @@ export async function apiCheckAuth() {
       axios.defaults.headers.common["Authorization"] = token;
 
       axios
-        .get(sourceUrls.user)
+        .get(sourceUrls.userCheckAuth)
         .then(({ data }) => {
           // console.log("apiCheckAuth completed successfully", data);
           resolve(data);
@@ -188,6 +190,37 @@ export async function apiUserAvatarDelete() {
       .delete(sourceUrls.userAvatar)
       .then(({ data }) => {
         // console.log("apiUserAvatarDelete completed successfully", data);
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(parseApiError(err));
+      });
+  });
+}
+
+// ---------------------------- User About ------------------------- //
+export async function apiUserAboutSelf() {
+  return new Promise((resolve, reject) => {
+    // reject("apiUserAboutSelf test stopper");
+    axios
+      .get(sourceUrls.userAboutSelf)
+      .then(({ data }) => {
+        // console.log("apiUserAboutSelf completed successfully", data);
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(parseApiError(err));
+      });
+  });
+}
+
+export async function apiUserAbout(userId) {
+  return new Promise((resolve, reject) => {
+    // reject("apiUserAbout test stopper");
+    axios
+      .get(sourceUrls.users + "/" + userId)
+      .then(({ data }) => {
+        // console.log("apiUserAbout completed successfully", data);
         resolve(data);
       })
       .catch((err) => {

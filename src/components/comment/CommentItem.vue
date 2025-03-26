@@ -15,7 +15,7 @@
 
     <div v-html="props.comment.text_html" class="ql-output"></div>
 
-    <div v-if="isOwn" class="d-flex justify-content-between">
+    <div v-if="isOwn && !readOnly" class="d-flex justify-content-between">
       <div class="d-flex align-items-center cursor-pointer link-secondary">
         <!-- <i class="fa fa-heart-o fs-5" aria-hidden="true"></i
         ><span class="ms-1">---</span> -->
@@ -26,14 +26,14 @@
       <div
         class="d-flex align-items-center link-secondary cursor-pointer gap-3"
       >
-        <template v-if="isOwn">
+        <!-- <template v-if="isOwn"> -->
           <i
             @click="confirmationOfDeletion()"
             class="fa fa-trash-o fs-5"
             aria-hidden="true"
             title="Delete a comment"
           ></i>
-        </template>
+        <!-- </template> -->
 
         <!-- <div>
           <i class="fa fa-comment-o fs-5" aria-hidden="true"></i
@@ -51,6 +51,10 @@ import { getUserId } from "@/composables/storeAuth";
 
 const props = defineProps({
   comment: Object,
+  readOnly: {
+    type: Boolean,
+    default: false,
+  }
 });
 
 const emit = defineEmits(["delete"]);

@@ -8,7 +8,7 @@
         <img
           :src="getAvatarUrl"
           alt="Current avatar"
-          class="w-32 mx-auto mb-1"
+          class="w-32 mx-auto mb-1 shadow"
         />
         <div class="text-center">
           <template v-if="getAvatarId">
