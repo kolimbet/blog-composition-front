@@ -55,6 +55,16 @@ const routes = [
     },
   },
   {
+    path: "/user/:userId",
+    name: "user_about",
+    component: () => import("@/components/user/TheUserAboutSome.vue"),
+    props: true,
+    meta: {
+      requiresAuthorization: false,
+      forAdmin: false,
+    },
+  },
+  {
     path: "/account",
     component: () => import("@/components/account/TheUserAccount.vue"),
     meta: {

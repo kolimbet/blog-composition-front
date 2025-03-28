@@ -5,11 +5,15 @@
       <div
         class="pb-0-75rem mb-0-75rem border border-2 border-blue border-top-0 border-start-0 border-end-0 text-center"
       >
-        <img
-          :src="getAvatarUrl"
-          alt="Current avatar"
-          class="w-32 mx-auto mb-1 shadow"
-        />
+        <Transition name="fade" mode="out-in">
+          <img
+            :key="getAvatarUrl"
+            :src="getAvatarUrl"
+            alt="Current avatar"
+            class="w-32 mx-auto mb-1 shadow"
+          />
+        </Transition>
+
         <div class="text-center">
           <template v-if="getAvatarId">
             <button

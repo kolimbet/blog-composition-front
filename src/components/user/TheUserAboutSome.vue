@@ -5,18 +5,18 @@
       class="position-absolute end-1 top-0"
     />
 
-    <h3 class="text-center">Home</h3>
+    <h3 class="text-center">About user</h3>
     <div class="min-vh-50">
       <div
         class="pb-0-75rem mb-0-75rem border border-2 border-blue border-top-0 border-start-0 border-end-0 text-center"
       >
         <img
-          :src="getAvatarUrl"
+          :src="uaAvatarUrl"
           alt="Current avatar"
           class="w-32 mx-auto mb-1 shadow"
         />
         <div>
-          <span class="fw-bold fs-5" title="Your login">{{ getUserName }}</span>
+          <span class="fw-bold fs-5" title="Your login">{{ uaUserName }}</span>
         </div>
         <div class="mt-1 fs-sm">
           <span class="text-secondary me-2">Status:</span>
@@ -26,7 +26,7 @@
             >{{ userStatus }}</span
           >
           <span
-            v-if="getIsBanned"
+            v-if="uaIsBanned"
             class="d-inline-block rounded px-2 ms-2 text-white border-1 border-opacity-75 bg-red border-red"
             >banned</span
           >
@@ -80,7 +80,7 @@
         <div class="mb-2 text-secondary fw-bold text-center">
           Recent comments:
         </div>
-        <div v-if="uaCommentsList">
+        <div v-if="uaCommentsList" class="mb-4">
           <TransitionGroup name="list-slide-left">
             <CommentItem
               v-for="comment in uaCommentsList"
@@ -90,7 +90,7 @@
             />
           </TransitionGroup>
         </div>
-        <div v-else>not found</div>
+        <div v-else class="mb-2">not found</div>
       </div>
     </div>
   </div>
@@ -101,17 +101,14 @@ import BaseIconUpdate from "../base/BaseIconUpdate.vue";
 import ErrorSingle from "../inc/ErrorSingle.vue";
 import PostPreviewFeed from "../post/PostPreviewFeed.vue";
 import CommentItem from "../comment/CommentItem.vue";
-import { computed, onMounted } from "vue";
-import { apiUserAboutSelf, apiCommentDestroy } from "@/api";
+import { computed, defineProps, onMounted } from "vue";
+import { apiUserAboutSome, apiCommentDestroy } from "@/api";
 import { useRequest } from "@/composables/request";
 import { useUserAbout } from "@/composables/userAbout";
 
-import {
-  getAvatarUrl,
-  getUserName,
-  getIsAdmin,
-  getIsBanned,
-} from "@/composables/storeAuth";
+const props = defineProps({
+  userId: Number,
+});
 
 const {
   refErrorMessage,
@@ -124,7 +121,10 @@ const {
 } = useRequest();
 
 const {
+  uaAvatarUrl,
+  uaUserName,
   uaIsAdmin,
+  uaIsBanned,
   uaCommentsCounter,
   uaPostsCounter,
   uaCommentsList,
@@ -134,9 +134,9 @@ const {
   uaPostLikeDestroy,
 } = useUserAbout();
 
-const userStatus = computed(() => (getIsAdmin.value ? "admin" : "user"));
+const userStatus = computed(() => (uaIsAdmin.value ? "admin" : "user"));
 const userStatusStyles = computed(() =>
-  getIsAdmin.value ? "bg-green border-green" : "bg-blue border-blue"
+  uaIsAdmin.value ? "bg-green border-green" : "bg-blue border-blue"
 );
 
 function requestUserData() {
@@ -144,7 +144,7 @@ function requestUserData() {
   requestProcessing.value = true;
   reloadErrors();
 
-  apiUserAboutSelf()
+  apiUserAboutSome(props.userId)
     .finally(() => {
       requestProcessing.value = false;
     })

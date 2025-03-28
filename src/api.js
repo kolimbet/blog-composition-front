@@ -214,7 +214,7 @@ export async function apiUserAboutSelf() {
   });
 }
 
-export async function apiUserAbout(userId) {
+export async function apiUserAboutSome(userId) {
   return new Promise((resolve, reject) => {
     // reject("apiUserAbout test stopper");
     axios

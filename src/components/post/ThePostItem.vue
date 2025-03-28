@@ -12,10 +12,13 @@
         </div>
       </div>
 
-      <div class="post-author-label">
+      <RouterLink
+        :to="{ name: 'user_about', params: { userId: authorId } }"
+        class="post-author-label"
+      >
         <img :src="authorAvatarURL" />
         <div>{{ post.author.name }}</div>
-      </div>
+      </RouterLink>
     </div>
     <div v-else>
       <h2 class="text-center">{{ `Post "${props.postSlug}"` }}</h2>
@@ -108,6 +111,9 @@ const {
 const postId = computed(() => (post.value ? post.value.id : null));
 const publishedAt = computed(() =>
   post.value ? dateFromTimestamp(post.value.published_at) : ""
+);
+const authorId = computed(() =>
+  post.value?.author?.id ? post.value.author.id : null
 );
 const authorAvatarURL = computed(() =>
   post.value?.author?.avatar

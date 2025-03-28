@@ -3,7 +3,14 @@
     <div class="label-id">#{{ props.comment.id }}</div>
 
     <aside class="d-flex align-items-center mb-2">
-      <img :src="authorAvatarURL" alt="Avatar" class="comment-avatar" />
+      <RouterLink :to="{ name: 'user_about', params: { userId: authorId } }">
+        <img
+          :key="authorAvatarURL"
+          :src="authorAvatarURL"
+          alt="Avatar"
+          class="comment-avatar"
+        />
+      </RouterLink>
       <div>
         <h6>{{ props.comment.author.name }}</h6>
         <div class="text-secondary fs-sm">
@@ -27,12 +34,12 @@
         class="d-flex align-items-center link-secondary cursor-pointer gap-3"
       >
         <!-- <template v-if="isOwn"> -->
-          <i
-            @click="confirmationOfDeletion()"
-            class="fa fa-trash-o fs-5"
-            aria-hidden="true"
-            title="Delete a comment"
-          ></i>
+        <i
+          @click="confirmationOfDeletion()"
+          class="fa fa-trash-o fs-5"
+          aria-hidden="true"
+          title="Delete a comment"
+        ></i>
         <!-- </template> -->
 
         <!-- <div>
@@ -54,13 +61,16 @@ const props = defineProps({
   readOnly: {
     type: Boolean,
     default: false,
-  }
+  },
 });
 
 const emit = defineEmits(["delete"]);
 
 const blockId = computed(() => "comment-" + props.comment.id);
 
+const authorId = computed(() =>
+  props.comment?.author?.id ? props.comment.author.id : id
+);
 const authorAvatarURL = computed(() =>
   props.comment?.author?.avatar
     ? props.comment.author.avatar.full_url

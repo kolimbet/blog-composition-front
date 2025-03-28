@@ -17235,6 +17235,7 @@ textarea.form-control-lg {
   font-weight: 600;
   color: #495057;
   text-align: center;
+  text-decoration: none;
 }
 .post-author-label img {
   -o-object-fit: contain;
@@ -17481,6 +17482,21 @@ textarea.form-control-lg {
   overflow: auto;
 }
 .folding-y-50-enter-active, .folding-y-50-leave-active {
+  -webkit-transition: all 0.5s linear;
+  transition: all 0.5s linear;
+  overflow: hidden;
+}
+.folding-y-150-enter-from, .folding-y-150-leave-to {
+  max-height: 0px;
+  opacity: 0;
+  overflow: hidden;
+}
+.folding-y-150-enter-to, .folding-y-150-leave-from {
+  max-height: 150px;
+  opacity: 1;
+  overflow: auto;
+}
+.folding-y-150-enter-active, .folding-y-150-leave-active {
   -webkit-transition: all 0.5s linear;
   transition: all 0.5s linear;
   overflow: hidden;

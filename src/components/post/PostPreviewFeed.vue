@@ -18,10 +18,13 @@
         </div>
       </div>
 
-      <div class="post-author-label">
+      <RouterLink
+        :to="{ name: 'user_about', params: { userId: authorId } }"
+        class="post-author-label"
+      >
         <img :src="authorAvatarURL" />
         <div>{{ post.author.name }}</div>
-      </div>
+      </RouterLink>
     </div>
 
     <!-- Request Error -->
@@ -87,6 +90,9 @@ const {
   reloadErrors,
 } = useRequest();
 
+const authorId = computed(() =>
+  props.post?.author?.id ? props.post.author.id : null
+);
 const authorAvatarURL = computed(() =>
   props.post?.author?.avatar
     ? props.post.author.avatar.full_url
